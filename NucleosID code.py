@@ -95,6 +95,13 @@ def running():
         precision_inter_ms2 = precision_inter_ms[pos:]
 
         precision_ms = len(precision_inter_ms2)
+        
+        sys_info = str(os.uname())
+    
+        pos = sys_info.find('sysname') + 9
+    
+        sys_name = sys_info[pos:pos+1]
+    
             
         try:
             reference_value = int(e4.get())
@@ -113,6 +120,11 @@ def running():
         # opening the reference file
 
         try:
+        
+#            if sys_name == 'W':
+#                file_modif = open("BD\\"+ref_name+".csv")
+#            else:
+#                file_modif = open("BD/"+ref_name+".csv")
             file_modif = open("BD/"+ref_name+".csv")
             reader = csv.reader(file_modif,delimiter=";")
 
@@ -218,7 +230,7 @@ def running():
                     list_test = []
                     list_test2 = []
 
-                    max = 0
+                    maximum = 0
                     max_int = 0
                     value_found = False
 
@@ -248,8 +260,8 @@ def running():
                                     frag_value = float(frag[0])
 
                                     intensity = int(frag[1])
-                                    if intensity > max:
-                                        max = intensity
+                                    if intensity > maximum:
+                                        maximum = intensity
 
                                     extract_msms = round(frag_value)
 
@@ -289,7 +301,7 @@ def running():
                             list_inter.append(extract_mass)
                             list_inter.append(list_final[i][0])
                             list_inter.append(list_modif)
-                            list_inter.append(max)
+                            list_inter.append(maximum)
 
                             list_modif = []
 
@@ -297,7 +309,7 @@ def running():
                             list_inter = []
 
                         value_found = False
-                        max = 0
+                        maximum = 0
 
                     # output: list of modifications found in the comparison
                 
@@ -396,11 +408,6 @@ def running():
                                         list_terminal2[j] = list_terminal[i]
 
                             is_present = 0
-
-
-                        print("list terminal2")
-                        print(list_terminal2)
-                        print(len(list_terminal2))
                         
                         # output: output list
                         
@@ -414,10 +421,12 @@ def running():
 
                                 result_file.write("Chosen parameters: \n")
                                 result_file.write("File analyzed: "+path_data+"\n")
-
-                                precision_str = str(precision)
-                                result_file.write("Precision: "+precision_str+"\n")
-                                result_file.write("Relative Intensity threshold: "+str(score_threshold)+"\n")
+                                result_file.write("Database used: "+ref_name+"\n")
+                                result_file.write("MS tolerance: "+str(precision)+comparison_type+"\n")
+                                result_file.write("MS/MS absolute intensity threshold: "+str(reference_value)+"\n")
+                                result_file.write("MS/MS score threshold: "+str(score_threshold)+"\n")
+                                result_file.write("Active exclusion: "+str(frequency)+"\n")
+                                
                                 result_file.write("\n")
 
                                 for i in range(0, len(list_terminal2)):
@@ -427,18 +436,20 @@ def running():
                                     result_file.write("Observed MS/MS: "+list_terminal2[i][3]+" Da \n")
                                     result_file.write("Theoretical MS/MS: "+list_terminal2[i][4]+" Da \n")
                                     result_file.write("Relative intensity: "+str(list_terminal2[i][5])+" % \n")
-                                    result_file.write("Start analysis: "+str(list_terminal2[i][6])+" min \n")
+                                    result_file.write("Detection time: "+str(list_terminal2[i][6])+" min \n")
                                     result_file.write("\n")
 
                                 result_file.close()
 
                             elif type_file == "csv":
-                                precision_full = "Precision: "+ str(precision)
-                                score_full = "Threshold: "+ str(score_threshold)
-                                frequency_full = "Windows: "+str(frequency)
+                                db_full = "Database: "+ref_name
+                                precision_full = "MS tolerance: "+ str(precision)+comparison_type
+                                score_full = "MS/MS threshold: "+ str(score_threshold)
+                                frequency_full = "Active exclusion: "+str(frequency)
+                                threshold_full = "MS/MS abs I threshold: "+str(reference_value)
 
-                                list_param = ["Chosen parameters: ", enter_file_name, precision_full, score_full, frequency_full]
-                                list_title = ["Modification", "Observed MS", "Theoretical MS", "Observed MS/MS","Theoretical MS/MS", "Relative intensity (%)", "Start analysis (min)"]
+                                list_param = ["Chosen parameters: ", enter_file_name, db_full, precision_full, threshold_full, score_full, frequency_full]
+                                list_title = ["Modification", "Observed MS", "Theoretical MS", "Observed MS/MS","Theoretical MS/MS", "Relative intensity (%)", "Detection time (min)"]
 
                                 out = open(full_end_file_name, "w+")
                                 writer = csv.writer(out, delimiter=";")
@@ -453,6 +464,8 @@ def running():
                                 out.close()
 
                             else:
+                                
+#                                print("1")
 
                                 list_name = []
                                 list_MS = []
@@ -471,9 +484,17 @@ def running():
                                     list_MSMS_theo.append(list_terminal2[i][4])
                                     list_score.append(list_terminal2[i][5])
                                     list_time.append(list_terminal2[i][6])
+                                
+#                                print("2")
+                                
+                                #print(type(comparison_type))
+                                
+                                precision_full = str(precision) + comparison_type
+                                
+#                                print("3")
 
-                                df = pd.DataFrame({'Modification': list_name, 'Observed MS (Da)': list_MS, 'Theoretical MS (Da)':list_MS_theo, 'Observed MS/MS (Da)': list_MSMS, 'Theoretical MS/MS (Da)':list_MSMS_theo, 'Relative intensity (%)': list_score, 'Start analysis (min)': list_time})
-                                df2 = pd.DataFrame({'Chosen parameters':[''], 'File analyzed': [enter_file_name], 'Precision (Da)':[precision], 'Intensity threshold': [score_threshold], 'Windows':[frequency]})
+                                df = pd.DataFrame({'Modification': list_name, 'Observed MS (Da)': list_MS, 'Theoretical MS (Da)':list_MS_theo, 'Observed MS/MS (Da)': list_MSMS, 'Theoretical MS/MS (Da)':list_MSMS_theo, 'Relative intensity (%)': list_score, 'Detection time (min)': list_time})
+                                df2 = pd.DataFrame({'Chosen parameters':[''], 'File analyzed': [enter_file_name], 'Database':[ref_name], 'MS tolerance':[precision_full], 'MS/MS abs I threshold':[reference_value], 'MS/MS threshold': [score_threshold], 'Active exclusion (min)':[frequency]})
 
                                 with pd.ExcelWriter(full_end_file_name) as writer:
                                     df.to_excel(writer, index=False, sheet_name="Result")
@@ -481,7 +502,6 @@ def running():
                             
                             e5.delete(0, "end")
                             e5.insert(0, 'Done')
-                            print("done")
                         
                         except:
                             print("error 5")
@@ -525,9 +545,9 @@ def running():
 root = tk.Tk()
 
 root.title("Nucleos'ID")
-root.geometry("590x670")
+root.geometry("650x670")
 root.config(bg ='#D9D9D9')
-root.minsize(590, 670)
+root.minsize(650, 670)
 
 f = tk.Frame(root, bg ='white', width= 20, height=1)
 f.pack(fill='x')
@@ -540,30 +560,30 @@ texte_titre.grid(row = 0, column = 0, sticky = 'w', pady = 2)
 texte_description.grid(row = 1, column = 0, sticky = 'w', pady = 2)
 
 c = tk.Canvas(f, width=86, height=86)
-c.grid(row = 0, column = 1, rowspan = 2, padx = 20, pady = 5)
+c.grid(row = 0, column = 1, rowspan = 2, padx = 60, pady = 5)
 
 
-img = tk.PhotoImage(file = 'logo5.png')
+img = tk.PhotoImage(file = 'logo3.png')
 c.create_image(0,0, anchor='nw', image=img)
 
 l_inter = tk.Frame(root, bg = 'black', width = 1)
 l_inter.pack(fill='x')
 
-l = tk.LabelFrame(root, text=" Files ", bg = '#D9D9D9')
+l = tk.LabelFrame(root, text=" Input & output files ", bg = '#D9D9D9')
 l.pack(fill="both", padx = 20, pady =20)
 
 t = tk.Label(l, text="Output file name:", bg = '#D9D9D9', padx= 15, pady = 10)
-t2 = tk.Label(l, text="Select file:", bg = '#D9D9D9', padx= 15, pady = 10)
+t2 = tk.Label(l, text="Input MGF file:", bg = '#D9D9D9', padx= 15, pady = 10)
 
-t.grid(row = 0, column = 0, sticky = 'w', pady = 2)
-t2.grid(row = 2, column = 0, sticky = 'w', pady = 2)
+t.grid(row = 1, column = 0, sticky = 'w', pady = 2)
+t2.grid(row = 0, column = 0, sticky = 'w', pady = 2)
 
-t6 = tk.Label(l, text="Output file type:", bg = '#D9D9D9', padx= 15, pady = 10 )
-t6.grid(row=1, column = 0, sticky = 'w', pady = 2)
+t6 = tk.Label(l, text="Output file format:", bg = '#D9D9D9', padx= 15, pady = 10 )
+t6.grid(row=2, column = 0, sticky = 'w', pady = 2)
 
 e1 = tk.Entry(l, width=15)
 e1.insert(0, "output")
-e1.grid(row = 0, column = 1, pady = 2)
+e1.grid(row = 1, column = 1, pady = 2)
 
 val = tk.StringVar()
 val.set("excel")
@@ -572,57 +592,63 @@ r3 = tk.Radiobutton(l, variable=val, text=".txt", bg = '#D9D9D9', value="text")
 r4 = tk.Radiobutton(l, variable=val, text=".csv", bg = '#D9D9D9', value="csv")
 r5 = tk.Radiobutton(l, variable=val, text=".xlsx", bg = '#D9D9D9', value="excel")
 
-r3.grid(row = 1, column = 1, sticky='w', padx= 30, pady = 2)
-r4.grid(row = 1, column = 2, sticky='w', pady = 0)
-r5.grid(row = 1, column = 3, sticky='w', pady = 0)
+r3.grid(row = 2, column = 1, sticky='w', padx= 30, pady = 2)
+r4.grid(row = 2, column = 2, sticky='w', padx= 0, pady = 0)
+r5.grid(row = 2, column = 3, sticky='w', padx= 0, pady = 0)
 
 e2 = tk.Entry(l, width=15)
-e2.grid(row = 2, column = 1, sticky = 'w', pady = 2)
+e2.grid(row = 0, column = 1, sticky = 'w', pady = 2)
 
 b = tk.Button(l, text= " Browse file ", command=pathway)
-b.grid(row = 2, column = 2, sticky = 'w', padx= 10, pady = 2)
+b.grid(row = 0, column = 2, sticky = 'w', padx= 10, pady = 2)
 
 l2 = tk.LabelFrame(root, text=" Settings ", bg = '#D9D9D9')
 l2.pack(fill="both", padx = 20, pady =20)
 
 t12 = tk.Label(l2, text="Database choice: ", bg = '#D9D9D9', padx = 20, pady = 10)
 t4 = tk.Label(l2, text="MS tolerance: ", bg = '#D9D9D9', padx = 20, pady = 10)
-t5 = tk.Label(l2, text="MS/MS score calculation:", bg = '#D9D9D9', padx = 20, pady = 10)
 t7 = tk.Label(l2, text="MS/MS score threshold:", bg = '#D9D9D9', padx = 20, pady = 10)
+#t7 = tk.Label(l2, text="MS/MS absolute intensity threshold:", bg = '#D9D9D9', padx = 20, pady = 10)
 t8 = tk.Label(l2, text="Active exclusion during:", bg = '#D9D9D9', padx = 20, pady = 10)
-t9 = tk.Label(l2, text=" %:", bg = '#D9D9D9', padx = 20, pady = 10)
+t9 = tk.Label(l2, text=" %", bg = '#D9D9D9', padx = 20, pady = 10)
 t10 = tk.Label(l2, text=" min", bg = '#D9D9D9', padx = 20, pady = 10)
-t13 = tk.Label(l2, text="Threshold intensity value:", bg = '#D9D9D9', padx = 20, pady = 10)
+#t13 = tk.Label(l2, text="Threshold intensity value:", bg = '#D9D9D9', padx = 20, pady = 10)
+t13 = tk.Label(l2, text="MS/MS absolute intensity threshold:", bg = '#D9D9D9', padx = 20, pady = 10)
+t14 = tk.Label(l2, text="AU", bg = '#D9D9D9', padx = 20, pady = 10)
 
 t12.grid(row = 0, column = 0, sticky = 'w')
-t4.grid(row = 1, column = 0, sticky = 'w', pady = 2)
+t4.grid(row = 1, column = 0, sticky = 'w')
+t13.grid(row = 2, column = 0, sticky = 'w')
+t7.grid(row = 3, column = 0, sticky = 'w')
+t8.grid(row = 4, column = 0, sticky = 'w')
+t9.grid(row = 3, column = 2, sticky = 'w')
+t10.grid(row = 4, column = 2, sticky = 'w')
+t14.grid(row = 2, column = 2, sticky = 'w')
 
-t7.grid(row = 2, column = 0, sticky = 'w', pady = 0)
-t8.grid(row = 3, column = 0, sticky = 'w', pady = 0)
-t9.grid(row = 2, column = 2, sticky = 'w', pady = 0)
-t10.grid(row = 3, column = 2, sticky = 'w', pady = 0)
-t13.grid(row = 4, column = 0, sticky = 'w')
 
-DB_list = ["Archaea", "Eukaryota", "Eubacteria", "Archaea+Eubacteria", "Archaea+Eukaryota", "Eubacteria+Eukaryota", "Archaea+Eubacteria+Eukaryota"]
+DB_list = ["Archaea", "Eukarya", "Eubacteria", "Archaea+Eubacteria", "Archaea+Eukarya", "Eubacteria+Eukarya", "Archaea+Eubacteria+Eukarya"]
 
 t11 = ttk.Combobox(l2, values=DB_list, state='readonly')
 t11.current(6)
 t11.grid(row =0, column=1, sticky='w', pady =0)
 
-
 l_value = [1, 0.1, 0.01, 0.001, 0.0001]
 
 s = tk.Spinbox(l2, value=l_value, increment=0.0001)
+s.delete(0, 5)
+s.insert(0, 0.02)
 s.grid(row=1, column=1, sticky='w', pady =0 )
 
 e3 = tk.Entry(l2, width=15)
 e3.insert(0, "20")
-e3.grid(row = 2, column = 1, sticky = 'w', pady = 0)
+e3.grid(row = 3, column = 1, sticky = 'w', pady = 0)
 
 l_value2 = ['0.1', '0.2', '0.5', '1', '2']
 
 s2 = tk.Spinbox(l2, value=l_value2, increment=0.1)
-s2.grid(row=3, column=1, sticky= 'w', pady=0)
+s2.delete(0, 5)
+s2.insert(0, 1)
+s2.grid(row=4, column=1, sticky= 'w', pady=0)
 
 val2 = tk.StringVar()
 val2.set("Da")
@@ -635,7 +661,7 @@ r7.grid(row = 1, column = 3, sticky = 'w', pady = 2)
 
 e4 = tk.Entry(l2, width=15)
 e4.insert(0, "0")
-e4.grid(row=4, column=1, sticky= 'w')
+e4.grid(row=2, column=1, sticky= 'w')
 
 l3 = tk.Frame(root, bg = '#D9D9D9', width = 1)
 l3.pack(fill="both", padx = 10, pady =10)
