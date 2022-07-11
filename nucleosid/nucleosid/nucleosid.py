@@ -21,9 +21,9 @@ class NucleosidApplication(object):
     def __init__(self):
         """Initialize the application."""
         self.database_list = [
-            "Archaea", "Eukaryota", "Eubacteria", "Archaea+Eubacteria",
-            "Archaea+Eukaryota", "Eubacteria+Eukaryota",
-            "Archaea+Eubacteria+Eukaryota"
+            "Archaea", "Eukarya", "Eubacteria", "Archaea+Eubacteria",
+            "Archaea+Eukarya", "Eubacteria+Eukarya",
+            "Archaea+Eubacteria+Eukarya"
         ]
         self.ms_tolerance_types = ["Da", "ppm"]
         self.root = tk.Tk()
