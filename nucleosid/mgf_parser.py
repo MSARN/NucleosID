@@ -1,16 +1,20 @@
 # Copyright 2022 CNRS and University of Strasbourg
 #
-#    Licensed under the Apache License, Version 2.0 (the "License");
-#    you may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#        http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""This module permits to parse a MGF file."""
+
+import numpy as np
 
 
 class MgfParser(object):
@@ -23,7 +27,7 @@ class MgfParser(object):
         """
         with open(filename, 'r') as mgf_file:
             contents = mgf_file.readlines()
-            self._parsemg_data(contents)
+            self._parse_mgf_data(contents)
         self.spectra = []
 
     def _parse_mgf_data(self, mgf_data):
@@ -67,3 +71,10 @@ class MgfParser(object):
     def get_spectra(self):
         """Return the spectra."""
         return self.spectra
+
+    def get_peak_list(self):
+        """Return the list of peaks."""
+        data = np.array()
+        for spectrum in self.spectra:
+            data = data.append(spectrum['data'])
+        return data
