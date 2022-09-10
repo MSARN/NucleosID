@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module permits to manage ARN modification databases."""
+"""This module permits to parse ARN modification databases."""
 
 import numpy as np
 import pandas as pd
 
 
-class ARNModificationDatabaseParser(object):
-    """A class for parsing the Nucleos'ID database file."""
+class ModificationDatabaseParser(object):
+    """A class for parsing an ARN modification database file."""
 
     COLUMN_TYPES = {
         'Short Name': np.dtype('O'),
@@ -29,7 +29,7 @@ class ARNModificationDatabaseParser(object):
 
     def __init__(self, database_file):
         """Initialize the DatabaseParser class."""
-        self.arn_modifications = {}
+        self.modification_database = {}
         with open(database_file) as database:
             database_df = pd.read_csv(database)
             if self.verify_database_structure(database_df):
@@ -52,11 +52,11 @@ class ARNModificationDatabaseParser(object):
             name = item[0]
             ms_value = item[1]
             ms_ms_value = item[2].split(';')
-            self.arn_modifications[name] = {
+            self.modification_database[name] = {
                 'ms_value': float(ms_value),
                 'ms_ms_values': ms_ms_value
             }
 
-    def get_arn_modification(self):
-        """Return the dabase as a panda object."""
-        return self.arn_modifications
+    def get_modification_database(self):
+        """Return the database as a panda object."""
+        return self.modification_database
