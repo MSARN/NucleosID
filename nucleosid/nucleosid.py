@@ -1,18 +1,41 @@
 #!/usr/bin/env python
 
+# Copyright 2022 CNRS and University of Strasbourg
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 """Module to manage the application."""
 
-import pkg_resources
-from pkg_resources import resource_string as resource_bytes
 import tkinter.filedialog as filedialog
 from tkinter import messagebox
 from tkinter import ttk
 import tkinter as tk
+import pkg_resources
+
+from nucleosid import mgf_parser
+from nucleosid import modification_database_parser as db_parser
+from nucleosid import spectrum_analyzer
 
 NAME = "Nucleos'ID"
-DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at" + \
+DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
               "nucleosides level."
 VERSION = '0.1.0'
+DEFAULT_THRESHOLD_INTENSITY = 0
+DEFAULT_MS_TOLERANCE = 0.02
+DEFAULT_MS_MS_TOLERANCE = 0.5
+DEFAULT_MS_MS_SCORE_THRESHOLD = 20
+DEFAULT_EXCLUSION_TIME = 1
 
 
 class NucleosidApplication(object):
@@ -21,11 +44,12 @@ class NucleosidApplication(object):
     def __init__(self):
         """Initialize the application."""
         self.database_list = [
-            "Archaea", "Eukarya", "Eubacteria", "Archaea+Eubacteria",
-            "Archaea+Eukarya", "Eubacteria+Eukarya",
-            "Archaea+Eubacteria+Eukarya"
+            "Archaea", "Eukaryota", "Eubacteria", "Archaea_Eubacteria",
+            "Archaea_Eukaryota", "Eubacteria_Eukaryota",
+            "Archaea_Eubacteria_Eukaryota"
         ]
         self.ms_tolerance_types = ["Da", "ppm"]
+        self.ms_ms_tolerance_types = ["Da", "ppm"]
         self.root = tk.Tk()
         self.root.title(NAME)
         self.root.grid()
@@ -49,8 +73,7 @@ class NucleosidApplication(object):
         output_file_path = filedialog.asksaveasfilename(
             title="Select the output file",
             filetypes=[
-                ('csv files', '.csv'), ('txt files', '.txt'),
-                ('xlsx file', '.xlsx')
+                ('csv files', '.csv'), ('xlsx file', '.xlsx')
             ]
         )
         if output_file_path[-4:] in ['.csv', '.txt', 'xlsx']:
@@ -60,10 +83,25 @@ class NucleosidApplication(object):
     def show_about(self):
         """Open a simple dialog window and give some information."""
         title = "About Nucleos'ID"
-        message = "Some info about Nucleos'ID"
+        message = "Nucleos'ID is a software for untargeted " + \
+                  "identification of RNA post-transcriptional " + \
+                  "modifications from MS/MS acquisitions.\n\n" + \
+                  "Further details can be obtained on: \n" + \
+                  "https://github.com/MSARN/NucleosID"
         messagebox.showinfo(
             title=title,
             message=message,
+        )
+
+    def analyze(self):
+        """Analyze the input file and write the output file."""
+        mgf_data_parser = mgf_parser.MgfParser(self.input_file)
+        modification_db_parser = db_parser.ModificationDatabaseParser(
+            self.database.get()
+        )
+        rna_analyzer = spectrum_analyzer.SpectrumAnalyzer(
+            mgf_data_parser.get_spectra(),
+            modification_db_parser.get_modification_database()
         )
 
     def create_widgets(self):
@@ -71,7 +109,9 @@ class NucleosidApplication(object):
         # Create the header
         self.canvas = tk.Canvas(self.root, width=128, height=128)
         self.canvas.grid(rowspan=2)
-        logo_path = pkg_resources.resource_filename('nucleosid', 'images/nucleosid-logo.png')
+        logo_path = pkg_resources.resource_filename(
+            'nucleosid', 'images/nucleosid-logo.png'
+        )
         self.logo = tk.PhotoImage(file=logo_path)
         self.canvas.create_image(0, 0, image=self.logo, anchor="nw")
         self.title = tk.Label(
@@ -120,47 +160,77 @@ class NucleosidApplication(object):
         self.database.current(6)
         self.database.grid(row=0, column=1, sticky='w')
 
-        # Intensity threshold
-        self.threshold_intensity_label = tk.Label(
-            self.lf3, text="MS/MS intensity threshold:"
-        )
-        self.threshold_intensity_label.grid(row=1, column=0, sticky='w')
-        self.threshold_intensity = tk.Entry(self.lf3, width=24, bg="white")
-        self.threshold_intensity.grid(row=1, column=1)
-
+        # MS Tolerance
         self.ms_tolerance_label = tk.Label(self.lf3, text="MS tolerance:")
-        self.ms_tolerance_label.grid(row=2, column=0, sticky='w')
+        self.ms_tolerance_label.grid(row=1, column=0, sticky='w')
         self.ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
-        self.ms_tolerance.grid(row=2, column=1)
+        self.ms_tolerance.insert(0, DEFAULT_MS_TOLERANCE)
+        self.ms_tolerance.grid(row=1, column=1)
         self.ms_tolerance_type = tk.StringVar()
         self.ms_tolerance_type = ttk.Combobox(
             self.lf3, values=self.ms_tolerance_types, state='readonly',
             width="4"
         )
-        self.ms_tolerance_type.current(1)
-        self.ms_tolerance_type.grid(row=2, column=2)
+        self.ms_tolerance_type.current(0)
+        self.ms_tolerance_type.grid(row=1, column=2)
+
+        # MS MS Tolerance
+        self.ms_ms_tolerance_label = tk.Label(
+            self.lf3, text="MS/MS tolerance:"
+        )
+        self.ms_ms_tolerance_label.grid(row=2, column=0, sticky='w')
+        self.ms_ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
+        self.ms_ms_tolerance.insert(0, DEFAULT_MS_MS_TOLERANCE)
+        self.ms_ms_tolerance.grid(row=2, column=1)
+        self.ms_ms_tolerance_type = tk.StringVar()
+        self.ms_ms_tolerance_type = ttk.Combobox(
+            self.lf3, values=self.ms_ms_tolerance_types, state='readonly',
+            width="4"
+        )
+        self.ms_ms_tolerance_type.current(0)
+        self.ms_ms_tolerance_type.grid(row=2, column=2)
+
+        # Intensity threshold
+        self.ms_ms_intensity_threshold_label = tk.Label(
+            self.lf3, text="MS/MS intensity threshold:"
+        )
+        self.ms_ms_intensity_threshold_label.grid(row=3, column=0, sticky='w')
+        self.ms_ms_intensity_threshold = tk.Entry(
+            self.lf3, width=24, bg="white"
+        )
+        self.ms_ms_intensity_threshold.insert(0, DEFAULT_THRESHOLD_INTENSITY)
+        self.ms_ms_intensity_threshold.grid(row=3, column=1)
+        self.ms_ms_intensity_threshold_unit = tk.Label(self.lf3, text="AU")
+        self.ms_ms_intensity_threshold_unit.grid(row=3, column=2, sticky='w')
+
+        # MS MS score threshold
         self.ms_ms_score_threshold_label = tk.Label(
             self.lf3, text="MS/MS score threshold:"
         )
-        self.ms_ms_score_threshold_label.grid(row=3, column=0, sticky='w')
+        self.ms_ms_score_threshold_label.grid(row=4, column=0, sticky='w')
         self.ms_ms_score_threshold = tk.Entry(self.lf3, width=24, bg="white")
-        self.ms_ms_score_threshold.grid(row=3, column=1)
+        self.ms_ms_score_threshold.insert(0, DEFAULT_MS_MS_SCORE_THRESHOLD)
+        self.ms_ms_score_threshold.grid(row=4, column=1)
         self.ms_ms_score_threshold_unit = tk.Label(self.lf3, text="%")
-        self.ms_ms_score_threshold_unit.grid(row=3, column=2, sticky='w')
+        self.ms_ms_score_threshold_unit.grid(row=4, column=2, sticky='w')
+
+        # Exclusion time
         self.exclusion_time_label = tk.Label(
             self.lf3, text="Exclusion time:"
         )
-        self.exclusion_time_label.grid(row=4, column=0, sticky='w')
+
+        self.exclusion_time_label.grid(row=5, column=0, sticky='w')
         self.exclusion_time = tk.Entry(self.lf3, width=24, bg="white")
-        self.exclusion_time.grid(row=4, column=1)
+        self.exclusion_time.insert(0, DEFAULT_EXCLUSION_TIME)
+        self.exclusion_time.grid(row=5, column=1)
         self.exclusion_time_unit = tk.Label(self.lf3, text="min")
-        self.exclusion_time_unit.grid(row=4, column=2, sticky='w')
+        self.exclusion_time_unit.grid(row=5, column=2, sticky='w')
 
         # Create the buttons
         self.lf4 = tk.Frame(self.root)
         self.lf4.grid(columnspan=2)
         self.run_button = tk.Button(
-            self.lf4, text='Run',
+            self.lf4, text='Analyze',
             command=self.root.quit
         )
         self.run_button.pack(side='left')
@@ -178,7 +248,8 @@ class NucleosidApplication(object):
 
 def main():
     """
-    Main function for the Nucleos'ID application. Handles command
+    Analzyzes Main function for the Nucleos'ID application. Handles command.
+
     line arguments and loads configuration before launching the
     application window.
     """
