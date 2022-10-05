@@ -27,7 +27,7 @@ class AnalysisWriter(object):
     def write_analysis(self, filename, filetype="csv"):
         """Analyse ARN modifications in the spectrum."""
         if filetype == 'xlsx':
-            self.write.xlsx_output(filename)
+            self.write_xlsx_output(filename)
         else:
             self.write_csv_output(filename)
 
@@ -35,10 +35,13 @@ class AnalysisWriter(object):
         """Write results as a CSV file."""
         self.data.to_csv(
             filename, index=False,
-            sheet_name="Nucleosid_Results"
         )
 
     def write_xlsx_output(self, filename):
         """Write results as an excel file."""
         with pd.ExcelWriter(filename) as writer:
-            self.data.to_excel(writer, index=False)
+            self.data.to_excel(
+                writer,
+                index=False,
+                sheet_name="Nucleosid_Results"
+            )
