@@ -23,9 +23,10 @@ from tkinter import ttk
 import tkinter as tk
 import pkg_resources
 
+from nucleosid import analysis_writer
 from nucleosid import mgf_parser
 from nucleosid import modification_database_parser as db_parser
-from nucleosid import spectrum_analyzer
+from nucleosid import mgf_data_analyzer
 
 NAME = "Nucleos'ID"
 DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
@@ -95,14 +96,26 @@ class NucleosidApplication(object):
 
     def analyze(self):
         """Analyze the input file and write the output file."""
-        mgf_data_parser = mgf_parser.MgfParser(self.input_file)
+        analysis_parameters = {
+            'ms_tolerance': float(self.ms_tolerance.get()),
+            'ms_ms_tolerance': float(self.ms_ms_tolerance.get()),
+            'exclusion_time': 0
+        }
+        mgf_data_parser = mgf_parser.MgfParser(self.input_file.get())
+        database_file = pkg_resources.resource_filename(
+            'nucleosid', 'databases/' + self.database.get() + '.csv'
+        )
         modification_db_parser = db_parser.ModificationDatabaseParser(
-            self.database.get()
+            database_file
         )
-        rna_analyzer = spectrum_analyzer.SpectrumAnalyzer(
-            mgf_data_parser.get_spectra(),
-            modification_db_parser.get_modification_database()
+        data_analyzer = mgf_data_analyzer.MGFDataAnalyzer(
+            mgf_data_parser.get_ms_ms_spectra(),
+            modification_db_parser.get_modification_database(),
+            analysis_parameters
         )
+        data_analyzer.find_arn_modifications()
+        output = analysis_writer.AnalysisWriter(data_analyzer.get_analysis())
+        output.write_analysis(self.output_file.get())
 
     def create_widgets(self):
         """Create the widgets."""
@@ -231,7 +244,7 @@ class NucleosidApplication(object):
         self.lf4.grid(columnspan=2)
         self.run_button = tk.Button(
             self.lf4, text='Analyze',
-            command=self.root.quit
+            command=self.analyze
         )
         self.run_button.pack(side='left')
         self.help_button = tk.Button(
