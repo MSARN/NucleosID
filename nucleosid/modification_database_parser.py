@@ -46,12 +46,12 @@ class ModificationDatabaseParser(object):
                 return False
         return True
 
-    def _parse_database(self, data):
+    def _parse_database(self, database):
         """Parse a Nucleos'ID database file."""
-        for item in data:
-            name = item[0]
-            ms_value = item[1]
-            ms_ms_value = item[2].split(';')
+        for item in database.itertuples():
+            name = item[1]
+            ms_value = item[2]
+            ms_ms_value = item[3].split(';')
             self.modification_database[name] = {
                 'ms_value': float(ms_value),
                 'ms_ms_values': ms_ms_value
