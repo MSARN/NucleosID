@@ -16,6 +16,8 @@
 
 import numpy as np
 
+from nucleosid import ms_ms_spectrum
+
 
 class MgfParser(object):
     """A class for parsing a MFG file."""
@@ -25,10 +27,10 @@ class MgfParser(object):
 
         :param str filename: a file with data in MGF format.
         """
+        self.ms_ms_spectra = []
         with open(filename, 'r') as mgf_file:
             contents = mgf_file.readlines()
             self._parse_mgf_data(contents)
-        self.spectra = []
 
     def _parse_mgf_data(self, mgf_data):
         """Read the header and store the information.
@@ -38,17 +40,16 @@ class MgfParser(object):
         in_header = True
         in_ions = False
         header = {}
-
         for line in mgf_data:
             stripped_line = line.strip()
             if stripped_line == 'BEGIN IONS':
                 in_header = False
                 in_ions = True
                 # A new spectrum
-                spectrum = {'data': []}
+                spectrum = ms_ms_spectrum.MSMSSpectrum()
             elif stripped_line == 'END IONS':
                 # End of the spectrum
-                self.spectra.append(spectrum)
+                self.ms_ms_spectra.append(spectrum)
                 in_ions = False
             elif '=' in stripped_line:
                 # a key / value parameter
@@ -59,22 +60,30 @@ class MgfParser(object):
                     if in_header:
                         header[key] = value
                     else:
-                        spectrum[key] = value
+                        if key == 'TITLE':
+                            spectrum.set_title(value)
+                        elif key == 'RTINSECONDS':
+                            spectrum.set_rtinseconds(value)
+                        elif key == 'PEPMASS':
+                            clean_value = value.split()[0]
+                            spectrum.set_pepmass(clean_value)
+                        elif key == 'CHARGE':
+                            spectrum.set_charge(value)
             else:
                 if in_ions:
-                    # mass spectrum data
-                    spectrum_data = splitted_line.strip()
-                    spectrum['data'].append((
+                    # Mass spectrum data
+                    spectrum_data = stripped_line.split()
+                    spectrum.append_data((
                         float(spectrum_data[0]), float(spectrum_data[1])
                     ))
 
-    def get_spectra(self):
+    def get_ms_ms_spectra(self):
         """Return the spectra."""
-        return self.spectra
+        return self.ms_ms_spectra
 
     def get_peak_list(self):
         """Return the list of peaks."""
         data = np.array()
-        for spectrum in self.spectra:
+        for spectrum in self.ms_ms_spectra:
             data = data.append(spectrum['data'])
         return data
