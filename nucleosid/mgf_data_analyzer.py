@@ -41,35 +41,37 @@ class MGFDataAnalyzer(object):
     def find_arn_modifications(self):
         """Analyse ARN modifications in the spectrum."""
         for spectrum in self.ms_ms_spectra:
-            hit_found = False
             exact_mass = spectrum.get_exact_mass()
             # Don't check time now
             # time = spectrum.get_time()
             # Si la masse est celle de la modif, alors
             for modification_name in self.arn_modifications:
+                hit_found = False
+                modified_mass = self.arn_modifications[modification_name]['ms_value']
                 delta = abs(
-                    exact_mass - self.arn_modifications[modification_name]['ms_value']
+                    exact_mass - modified_mass
                 )
                 if delta <= self.ms_tolerance:
-                    data = spectrum.get_data()
-                    for (peak_mass, intensity) in data:
-                        for value in self.arn_modifications[modification_name]['ms_ms_values']:
-                            diff = abs(float(peak_mass) - float(value))
+                    peaks = spectrum.get_peaks()
+                    matching_peaks = []
+                    modified_frag_masses = self.arn_modifications[modification_name]['ms_ms_values']
+                    for modified_frag_mass in modified_frag_masses:
+                        for (frag_mass, intensity) in peaks:
+                            diff = abs(frag_mass - float(modified_frag_mass))
                             if diff <= self.ms_ms_tolerance:
-                                # this is a modification
+                                matching_peaks.append(round(frag_mass))
                                 hit_found = True
-                if hit_found:
-                    # Add the missing analysis value
-                    self.arn_analysis.loc[len(self.arn_analysis.index)] = [
-                        modification_name,
-                        exact_mass,
-                        self.arn_modifications[modification_name]['ms_value'],
-                        0,
-                        0,
-                        0,
-                        0
-                    ] 
-                    break
+                    if hit_found:
+                        # Add the missing analysis value
+                        self.arn_analysis.loc[len(self.arn_analysis.index)] = [
+                            modification_name,
+                            exact_mass,
+                            modified_mass,
+                            ';'.join([str(x) for x in matching_peaks]),
+                            ';'.join([str(y) for y in modified_frag_masses]),
+                            0,
+                            0
+                        ]
 
     def get_analysis(self):
         """Return the result of ARN modification analysis."""
