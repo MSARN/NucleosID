@@ -24,7 +24,7 @@ class MSMSSpectrum(object):
         self.rtinseconds = None
         self.pepmass = None
         self.charge = None
-        self.data = []
+        self.peaks = []
 
     def set_title(self, title):
         """Set the title."""
@@ -42,9 +42,9 @@ class MSMSSpectrum(object):
         """Set the charge."""
         self.charge = charge
 
-    def append_data(self, data):
+    def append_peak(self, peak):
         """Append spectrum data."""
-        self.data.append(data)
+        self.peaks.append(peak)
 
     def get_exact_mass(self):
         """Return the exact mass."""
@@ -54,6 +54,6 @@ class MSMSSpectrum(object):
         """Return the time of the spectrum."""
         return self.rtinseconds
 
-    def get_data(self):
+    def get_peaks(self):
         """Return the list of fragments."""
-        return self.data
+        return self.peaks

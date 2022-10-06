@@ -71,11 +71,16 @@ class MgfParser(object):
                             spectrum.set_charge(value)
             else:
                 if in_ions:
-                    # Mass spectrum data
-                    spectrum_data = stripped_line.split()
-                    spectrum.append_data((
-                        float(spectrum_data[0]), float(spectrum_data[1])
-                    ))
+                    # Mass spectrum peak
+                    data = stripped_line.split()
+                    if len(data) != 2:
+                        # This should raise an error, as we only should have
+                        # a mass value followed by and intensity
+                        pass
+                    else:
+                        spectrum.append_peak((
+                            float(data[0]), float(data[1])
+                        ))
 
     def get_ms_ms_spectra(self):
         """Return the spectra."""
