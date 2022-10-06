@@ -33,6 +33,7 @@ class AnalysisWriter(object):
 
     def write_csv_output(self, filename):
         """Write results as a CSV file."""
+        self.data.sort_values('Observed MS (Da)', inplace=True)
         self.data.to_csv(
             filename, index=False,
         )
@@ -40,6 +41,7 @@ class AnalysisWriter(object):
     def write_xlsx_output(self, filename):
         """Write results as an excel file."""
         with pd.ExcelWriter(filename) as writer:
+            self.data.sort_values('Observed MS (Da)', inplace=True)
             self.data.to_excel(
                 writer,
                 index=False,
