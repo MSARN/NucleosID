@@ -14,6 +14,8 @@ version = re.search(
 with open("README.rst", "rb") as f:
     long_descr = f.read().decode("utf-8")
 
+with open('requirements.txt') as requirements:
+    install_requires = requirements.read()
 
 def package_files(directory):
     paths = []
@@ -28,6 +30,7 @@ setup(
     version=version,
     description='Identification of RNA post-transcriptional modifications',
     long_description=long_descr,
+    install_requires=install_requires,
     author='LSMIS',
     url='https://github.com/MSARN/nucleosid',
     contact='yfrancois@unistra.fr',
