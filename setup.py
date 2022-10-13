@@ -53,5 +53,5 @@ setup(
     include_package_data=True,
     package_data={
         'nucleosid': ['databases/*.csv', 'images/*.png']
-                 }
+    }
 )
