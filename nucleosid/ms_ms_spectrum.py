@@ -50,7 +50,7 @@ class MSMSSpectrum(object):
         """Return the exact mass."""
         return self.pepmass
 
-    def get_time(self):
+    def get_rtinseconds(self):
         """Return the time of the spectrum."""
         return self.rtinseconds
 
