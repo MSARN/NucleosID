@@ -51,10 +51,12 @@ class ModificationDatabaseParser(object):
         for item in database.itertuples():
             name = item[1]
             ms_value = item[2]
-            ms_ms_value = item[3].split(';')
+            ms_ms_values = []
+            for value in item[3].split(';'):
+                ms_ms_values.append(float(value))
             self.modification_database[name] = {
                 'ms_value': float(ms_value),
-                'ms_ms_values': ms_ms_value
+                'ms_ms_values': ms_ms_values
             }
 
     def get_modification_database(self):
