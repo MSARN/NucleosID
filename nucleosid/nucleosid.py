@@ -77,7 +77,7 @@ class NucleosidApplication(object):
                 ('csv files', '.csv'), ('xlsx file', '.xlsx')
             ]
         )
-        if output_file_path[-4:] in ['.csv', '.txt', 'xlsx']:
+        if output_file_path[-4:] in ['.csv', 'xlsx']:
             self.output_file.delete(0, 'end')
             self.output_file.insert(0, output_file_path)
 
@@ -98,8 +98,11 @@ class NucleosidApplication(object):
         """Analyze the input file and write the output file."""
         analysis_parameters = {
             'ms_tolerance': float(self.ms_tolerance.get()),
+            'ms_tolerance_type': str(self.ms_tolerance_type.get()),
             'ms_ms_tolerance': float(self.ms_ms_tolerance.get()),
-            'exclusion_time': 0
+            'ms_ms_tolerance_type': str(self.ms_ms_tolerance_type.get()),
+            'ms_ms_score_threshold': float(self.ms_ms_score_threshold.get()),
+            'exclusion_time': float(self.exclusion_time.get())
         }
         mgf_data_parser = mgf_parser.MgfParser(self.input_file.get())
         database_file = pkg_resources.resource_filename(
@@ -115,7 +118,11 @@ class NucleosidApplication(object):
         )
         data_analyzer.find_arn_modifications()
         output = analysis_writer.AnalysisWriter(data_analyzer.get_analysis())
-        output.write_analysis(self.output_file.get())
+        if self.output_file.get()[-5:] == '.xlsx':
+            output.write_analysis(self.output_file.get(), 'xlsx')
+        else:
+            # Save as CSV file by default
+            output.write_analysis(self.output_file.get())
 
     def create_widgets(self):
         """Create the widgets."""
@@ -236,7 +243,7 @@ class NucleosidApplication(object):
         self.exclusion_time = tk.Entry(self.lf3, width=24, bg="white")
         self.exclusion_time.insert(0, DEFAULT_EXCLUSION_TIME)
         self.exclusion_time.grid(row=5, column=1)
-        self.exclusion_time_unit = tk.Label(self.lf3, text="min")
+        self.exclusion_time_unit = tk.Label(self.lf3, text="s")
         self.exclusion_time_unit.grid(row=5, column=2, sticky='w')
 
         # Create the buttons
