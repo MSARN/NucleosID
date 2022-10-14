@@ -185,7 +185,7 @@ class NucleosidApplication(object):
         self.database.grid(row=0, column=1, sticky='w')
 
         # MS Tolerance
-        self.ms_tolerance_label = tk.Label(self.lf3, text="MS tolerance:")
+        self.ms_tolerance_label = tk.Label(self.lf3, text="MS mass tolerance:")
         self.ms_tolerance_label.grid(row=1, column=0, sticky='w')
         self.ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
         self.ms_tolerance.insert(0, DEFAULT_MS_TOLERANCE)
@@ -200,7 +200,7 @@ class NucleosidApplication(object):
 
         # MS MS Tolerance
         self.ms_ms_tolerance_label = tk.Label(
-            self.lf3, text="MS/MS tolerance:"
+            self.lf3, text="MS/MS mass tolerance:"
         )
         self.ms_ms_tolerance_label.grid(row=2, column=0, sticky='w')
         self.ms_ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
