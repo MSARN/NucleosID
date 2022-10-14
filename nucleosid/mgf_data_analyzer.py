@@ -41,14 +41,16 @@ class MGFDataAnalyzer(object):
             'Score (%)': pd.Series(dtype='float'),
             'Detection time (s)': pd.Series(dtype='float')
         })
+        self.filtered_results = 0
 
     def find_arn_modifications(self):
         """Analyse ARN modifications in the spectrum."""
-        matching_modifications = []
+        matching_modifications = {}
+        hit_number = 0
         for spectrum in self.ms_ms_spectra:
             exact_mass = spectrum.get_exact_mass()
-            for modification_name in self.arn_modifications:
-                modified_mass = self.arn_modifications[modification_name]['ms_value']
+            for mod_name in self.arn_modifications:
+                modified_mass = self.arn_modifications[mod_name]['ms_value']
                 if self.ms_tolerance_type == 'ppm':
                     delta = abs(exact_mass - modified_mass)/modified_mass * 1000000
                 else:
@@ -57,7 +59,7 @@ class MGFDataAnalyzer(object):
                     # A matching mass has been found
                     peaks = spectrum.get_peaks()
                     matching_peaks = {}
-                    modified_frag_masses = self.arn_modifications[modification_name]['ms_ms_values']
+                    modified_frag_masses = self.arn_modifications[mod_name]['ms_ms_values']
                     max_intensity = 0
                     # Max intensity for the current modification matching a fragment
                     # spectrum
@@ -87,9 +89,10 @@ class MGFDataAnalyzer(object):
                                             frag_mass, intensity
                                         )
                     if matching_peaks:
+                        hit_number += 1
                         frag_max_intensity = 0
                         frag_masses = []
-                        # Post analysis
+                        # Compute the score for each result
                         for key_mass in matching_peaks:
                             frag_max_intensity = max(
                                 matching_peaks[key_mass][1],
@@ -104,27 +107,62 @@ class MGFDataAnalyzer(object):
                         if (score * 100) > self.ms_ms_score_threshold:
                             matching_masses = ';'.join([str(x) for x in frag_masses])
                             mod_frag_masses = ';'.join([str(y) for y in modified_frag_masses])
-                            matching_modifications.append({
-                                'mod_name': modification_name,
+                            if mod_name not in matching_modifications:
+                                matching_modifications[mod_name] = []
+
+                            matching_modifications[mod_name].append({
                                 'exact_mass': exact_mass,
                                 'modified_mass': modified_mass,
                                 'matching_masses': matching_masses,
                                 'mod_frag_masses': mod_frag_masses,
                                 'score': round(score*100, 2),
+                                'intensity': frag_max_intensity,
                                 'rtinseconds': spectrum.get_rtinseconds()
                             })
+        # Filter results based on the detection time
+        filtered_modifications = self.filter_result_by_detection_time(
+            matching_modifications
+        )
+
+        self.filtered_results = hit_number - len(filtered_modifications)
+
         # Only modification where ms ms match is added!
-        for match in matching_modifications:
-            # Add the missing analysis value
-            self.arn_analysis.loc[len(self.arn_analysis.index)] = [
-                match['mod_name'],
-                match['exact_mass'],
-                match['modified_mass'],
-                match['matching_masses'],
-                match['mod_frag_masses'],
-                match['score'],
-                match['rtinseconds'],
-            ]
+        for modification_type in filtered_modifications:
+            for modification in filtered_modifications[modification_type]:
+                # Add the missing analysis value
+                self.arn_analysis.loc[len(self.arn_analysis.index)] = [
+                    modification_type,
+                    modification['exact_mass'],
+                    modification['modified_mass'],
+                    modification['matching_masses'],
+                    modification['mod_frag_masses'],
+                    modification['score'],
+                    modification['rtinseconds'],
+                ]
+
+    def filter_result_by_detection_time(self, modifications):
+        """Filter modifications by detection time."""
+        filtered_modifications = {}
+        for mod_name in modifications:
+            for modification in modifications[mod_name]:
+                if mod_name not in filtered_modifications:
+                    filtered_modifications[mod_name] = [
+                        modification
+                    ]
+                else:
+                    cursor = len(filtered_modifications[mod_name]) - 1
+                    previous_time = filtered_modifications[mod_name][cursor]['rtinseconds']
+                    current_time = modification['rtinseconds']
+                    if abs(current_time - previous_time) < self.exclusion_time:
+                        # Select the peak with the highst intensity
+                        if modification['intensity'] > \
+                                filtered_modifications[mod_name][cursor]['intensity']:
+                            filtered_modifications[mod_name][cursor] = modification
+                    else:
+                        filtered_modifications[mod_name].append(
+                            modification
+                        )
+        return filtered_modifications
 
     def get_analysis(self):
         """Return the result of ARN modification analysis."""
