@@ -73,9 +73,9 @@ class MgfParser(object):
                 if in_ions:
                     # Mass spectrum peak
                     data = stripped_line.split()
-                    if len(data) != 2:
-                        # This should raise an error, as we only should have
-                        # a mass value followed by and intensity
+                    if len(data) < 2:
+                        # This should raise an error, as we only should have,
+                        # at least, a mass value followed by and intensity
                         pass
                     else:
                         spectrum.append_peak((
