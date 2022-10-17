@@ -41,12 +41,12 @@ class MGFDataAnalyzer(object):
             'Score (%)': pd.Series(dtype='float'),
             'Detection time (s)': pd.Series(dtype='float')
         })
-        self.filtered_results = 0
+        self.filtered_number = 0
 
     def find_arn_modifications(self):
         """Analyse ARN modifications in the spectrum."""
         matching_modifications = {}
-        hit_number = 0
+        raw_hit_number = 0
         for spectrum in self.ms_ms_spectra:
             exact_mass = spectrum.get_exact_mass()
             for mod_name in self.arn_modifications:
@@ -89,7 +89,7 @@ class MGFDataAnalyzer(object):
                                             frag_mass, intensity
                                         )
                     if matching_peaks:
-                        hit_number += 1
+                        raw_hit_number += 1
                         frag_max_intensity = 0
                         frag_masses = []
                         # Compute the score for each result
@@ -124,12 +124,13 @@ class MGFDataAnalyzer(object):
             matching_modifications
         )
 
-        self.filtered_results = hit_number - len(filtered_modifications)
+        filtered_hit_number = 0
 
         # Only modification where ms ms match is added!
         for modification_type in filtered_modifications:
             for modification in filtered_modifications[modification_type]:
                 # Add the missing analysis value
+                filtered_hit_number += 1
                 self.arn_analysis.loc[len(self.arn_analysis.index)] = [
                     modification_type,
                     modification['exact_mass'],
@@ -139,6 +140,7 @@ class MGFDataAnalyzer(object):
                     modification['score'],
                     modification['rtinseconds'],
                 ]
+        self.filtered_number = raw_hit_number - filtered_hit_number
 
     def filter_result_by_detection_time(self, modifications):
         """Filter modifications by detection time."""

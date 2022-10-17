@@ -18,7 +18,6 @@
 """Module to manage the application."""
 
 import tkinter.filedialog as filedialog
-from tkinter import messagebox
 from tkinter import ttk
 import tkinter as tk
 import pkg_resources
@@ -27,16 +26,17 @@ from nucleosid import analysis_writer
 from nucleosid import mgf_parser
 from nucleosid import modification_database_parser as db_parser
 from nucleosid import mgf_data_analyzer
+from nucleosid import info_dialog
 
 NAME = "Nucleos'ID"
 DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
               "nucleosides level."
-VERSION = '0.1.0'
+VERSION = '0.8.0'
 DEFAULT_THRESHOLD_INTENSITY = 0
 DEFAULT_MS_TOLERANCE = 0.02
 DEFAULT_MS_MS_TOLERANCE = 0.5
 DEFAULT_MS_MS_SCORE_THRESHOLD = 20
-DEFAULT_EXCLUSION_TIME = 1
+DEFAULT_EXCLUSION_TIME = 60
 
 
 class NucleosidApplication(object):
@@ -88,14 +88,16 @@ class NucleosidApplication(object):
     def show_about(self):
         """Open a simple dialog window and give some information."""
         title = "About Nucleos'ID"
-        message = "Nucleos'ID is a software for untargeted " + \
-                  "identification of RNA post-transcriptional " + \
-                  "modifications from MS/MS acquisitions.\n\n" + \
-                  "Further details can be obtained on: \n" + \
-                  "https://github.com/MSARN/NucleosID"
-        messagebox.showinfo(
+        message = (
+            "Nucleos'ID is a software for untargeted identification of RNA\n"
+            "post-transcriptional modifications from MS/MS acquisitions.\n\n"
+            "Further details can be obtained on:\n"
+            "https://github.com/MSARN/NucleosID"
+        )
+        info_dialog.InfoDialog(
+            self.root,
             title=title,
-            message=message,
+            text=message,
         )
 
     def analyze(self):
@@ -121,12 +123,34 @@ class NucleosidApplication(object):
             analysis_parameters
         )
         data_analyzer.find_arn_modifications()
-        output = analysis_writer.AnalysisWriter(data_analyzer.get_analysis())
-        if self.output_file.get()[-5:] == '.xlsx':
-            output.write_analysis(self.output_file.get(), 'xlsx')
+        results = data_analyzer.get_analysis()
+        if not results.empty:
+            # Write output only if hits have been found
+            output = analysis_writer.AnalysisWriter(results)
+            if self.output_file.get()[-5:] == '.xlsx':
+                output.write_analysis(self.output_file.get(), 'xlsx')
+            else:
+                # Save as CSV file by default
+                output.write_analysis(self.output_file.get())
+            message = (
+                "The analysis is successful. The output has been saved to:\n"
+                "%s\n\n"
+                "%i matching ARN modifications have been found\n"
+                "%i hits have been filtered out using the given parameters\n"
+                % (self.output_file.get(), len(results),
+                   data_analyzer.filtered_number)
+            )
         else:
-            # Save as CSV file by default
-            output.write_analysis(self.output_file.get())
+            message = (
+                "No ARN modifications could be found using the given\n"
+                "parameters."
+            )
+        title = "Analysis Results"
+        info_dialog.InfoDialog(
+            self.root,
+            title=title,
+            text=message
+        )
 
     def create_widgets(self):
         """Create the widgets."""
