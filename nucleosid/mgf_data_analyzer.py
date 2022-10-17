@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module provides a class for analysing data of a MGF data file ."""
+"""This module provides a class for analysing data of a MGF data file."""
 
 import pandas as pd
 
