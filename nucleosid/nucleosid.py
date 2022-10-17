@@ -135,8 +135,8 @@ class NucleosidApplication(object):
             message = (
                 "The analysis is successful. The output has been saved to:\n"
                 "%s\n\n"
-                "%i matching ARN modifications have been found\n"
-                "%i hits have been filtered out using the given parameters\n"
+                "%i matching RNA modifications have been found\n"
+                "%i hits have been filtered out using the given filters\n"
                 % (self.output_file.get(), len(results),
                    data_analyzer.filtered_number)
             )
@@ -238,57 +238,60 @@ class NucleosidApplication(object):
         self.ms_ms_tolerance_type.current(0)
         self.ms_ms_tolerance_type.grid(row=2, column=2)
 
+        # Create the filter box
+        self.lf4 = tk.LabelFrame(self.root, text="Filters")
+        self.lf4.grid(sticky="ew", columnspan=2)
         # Intensity threshold
         self.ms_ms_intensity_threshold_label = tk.Label(
-            self.lf3, text="MS/MS intensity threshold:"
+            self.lf4, text="MS/MS intensity threshold:"
         )
-        self.ms_ms_intensity_threshold_label.grid(row=3, column=0, sticky='w')
+        self.ms_ms_intensity_threshold_label.grid(row=0, column=0, sticky='w')
         self.ms_ms_intensity_threshold = tk.Entry(
-            self.lf3, width=24, bg="white"
+            self.lf4, width=24, bg="white"
         )
         self.ms_ms_intensity_threshold.insert(0, DEFAULT_THRESHOLD_INTENSITY)
-        self.ms_ms_intensity_threshold.grid(row=3, column=1)
-        self.ms_ms_intensity_threshold_unit = tk.Label(self.lf3, text="AU")
-        self.ms_ms_intensity_threshold_unit.grid(row=3, column=2, sticky='w')
+        self.ms_ms_intensity_threshold.grid(row=0, column=1)
+        self.ms_ms_intensity_threshold_unit = tk.Label(self.lf4, text="AU")
+        self.ms_ms_intensity_threshold_unit.grid(row=0, column=2, sticky='w')
 
         # MS MS score threshold
         self.ms_ms_score_threshold_label = tk.Label(
-            self.lf3, text="MS/MS score threshold:"
+            self.lf4, text="MS/MS score threshold:"
         )
-        self.ms_ms_score_threshold_label.grid(row=4, column=0, sticky='w')
-        self.ms_ms_score_threshold = tk.Entry(self.lf3, width=24, bg="white")
+        self.ms_ms_score_threshold_label.grid(row=1, column=0, sticky='w')
+        self.ms_ms_score_threshold = tk.Entry(self.lf4, width=24, bg="white")
         self.ms_ms_score_threshold.insert(0, DEFAULT_MS_MS_SCORE_THRESHOLD)
-        self.ms_ms_score_threshold.grid(row=4, column=1)
-        self.ms_ms_score_threshold_unit = tk.Label(self.lf3, text="%")
-        self.ms_ms_score_threshold_unit.grid(row=4, column=2, sticky='w')
+        self.ms_ms_score_threshold.grid(row=1, column=1)
+        self.ms_ms_score_threshold_unit = tk.Label(self.lf4, text="%")
+        self.ms_ms_score_threshold_unit.grid(row=1, column=2, sticky='w')
 
         # Exclusion time
         self.exclusion_time_label = tk.Label(
-            self.lf3, text="Exclusion time:"
+            self.lf4, text="Exclusion time:"
         )
 
-        self.exclusion_time_label.grid(row=5, column=0, sticky='w')
-        self.exclusion_time = tk.Entry(self.lf3, width=24, bg="white")
+        self.exclusion_time_label.grid(row=2, column=0, sticky='w')
+        self.exclusion_time = tk.Entry(self.lf4, width=24, bg="white")
         self.exclusion_time.insert(0, DEFAULT_EXCLUSION_TIME)
-        self.exclusion_time.grid(row=5, column=1)
-        self.exclusion_time_unit = tk.Label(self.lf3, text="s")
-        self.exclusion_time_unit.grid(row=5, column=2, sticky='w')
+        self.exclusion_time.grid(row=2, column=1)
+        self.exclusion_time_unit = tk.Label(self.lf4, text="s")
+        self.exclusion_time_unit.grid(row=2, column=2, sticky='w')
 
         # Create the buttons
-        self.lf4 = tk.Frame(self.root)
-        self.lf4.grid(columnspan=2)
+        self.lf5 = tk.Frame(self.root)
+        self.lf5.grid(columnspan=2)
         self.run_button = tk.Button(
-            self.lf4, text='Analyze',
+            self.lf5, text='Analyze',
             command=self.analyze
         )
         self.run_button.pack(side='left')
         self.help_button = tk.Button(
-            self.lf4, text='About',
+            self.lf5, text='About',
             command=self.show_about
         )
         self.help_button.pack(side='left')
         self.quit_button = tk.Button(
-            self.lf4, text='Quit',
+            self.lf5, text='Quit',
             command=self.root.quit
         )
         self.quit_button.pack(side='left')
