@@ -53,7 +53,7 @@ class NucleosidApplication(object):
         self.ms_ms_tolerance_types = ["Da", "ppm"]
         self.root = tk.Tk()
         icon_file = pkg_resources.resource_filename(
-            'nucleosid', 'images/nucleosid.png'
+            'nucleosid', 'images/nucleosid-icon.png'
         )
         self.root.iconphoto(True, tk.PhotoImage(file=icon_file))
         self.root.title(NAME)
