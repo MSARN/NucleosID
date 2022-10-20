@@ -31,9 +31,9 @@ setup(
     description='Identification of RNA post-transcriptional modifications',
     long_description=long_descr,
     install_requires=install_requires,
-    author='LSMIS',
+    author='Jérôme Pansanel',
     url='https://github.com/MSARN/nucleosid',
-    contact='yfrancois@unistra.fr',
+    contact='jerome.pansanel@iphc.cnrs.fr',
     packages=find_packages(include=['nucleosid']),
     entry_points={
         "console_scripts": ['nucleosid = nucleosid.nucleosid:main']
