@@ -104,7 +104,7 @@ class MGFDataAnalyzer(object):
                             score = 0
                         else:
                             score = frag_max_intensity / max_intensity
-                        if (score * 100) > self.ms_ms_score_threshold:
+                        if (score * 100) >= self.ms_ms_score_threshold:
                             matching_masses = ';'.join([str(x) for x in frag_masses])
                             mod_frag_masses = ';'.join([str(y) for y in modified_frag_masses])
                             if mod_name not in matching_modifications:
