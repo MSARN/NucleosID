@@ -146,6 +146,7 @@ class MGFDataAnalyzer(object):
         """Filter modifications by detection time."""
         filtered_modifications = {}
         for mod_name in modifications:
+            window_start = 0
             for modification in modifications[mod_name]:
                 if mod_name not in filtered_modifications:
                     filtered_modifications[mod_name] = [
@@ -154,8 +155,10 @@ class MGFDataAnalyzer(object):
                 else:
                     cursor = len(filtered_modifications[mod_name]) - 1
                     previous_time = filtered_modifications[mod_name][cursor]['rtinseconds']
+                    if previous_time > (window_start + self.exclusion_time):
+                        window_start = previous_time
                     current_time = modification['rtinseconds']
-                    if abs(current_time - previous_time) < self.exclusion_time:
+                    if abs(current_time - window_start) <= self.exclusion_time:
                         # Select the peak with the highst intensity
                         if modification['intensity'] > \
                                 filtered_modifications[mod_name][cursor]['intensity']:
