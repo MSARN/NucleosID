@@ -31,7 +31,7 @@ from nucleosid import info_dialog
 NAME = "Nucleos'ID"
 DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
               "nucleosides level."
-VERSION = '0.8.0'
+VERSION = '0.9.0'
 DEFAULT_THRESHOLD_INTENSITY = 0
 DEFAULT_MS_TOLERANCE = 0.02
 DEFAULT_MS_MS_TOLERANCE = 0.5
@@ -53,7 +53,7 @@ class NucleosidApplication(object):
         self.ms_ms_tolerance_types = ["Da", "ppm"]
         self.root = tk.Tk()
         icon_file = pkg_resources.resource_filename(
-            'nucleosid', 'images/nucleosid.png'
+            'nucleosid', 'images/nucleosid-icon.png'
         )
         self.root.iconphoto(True, tk.PhotoImage(file=icon_file))
         self.root.title(NAME)
@@ -176,8 +176,8 @@ class NucleosidApplication(object):
         self.lf1.grid(sticky="ew", columnspan=2)
         self.input_file_label = tk.Label(self.lf1, text="Input file:")
         self.input_file_label.grid(row=0, column=0, sticky='w')
-        self.input_file = tk.Entry(self.lf1, width=24, bg="white")
-        self.input_file.grid(row=0, column=1)
+        self.input_file = tk.Entry(self.lf1, width=28, bg="white")
+        self.input_file.grid(row=0, column=1, sticky='w')
         self.input_file_selection = tk.Button(
             self.lf1, text="Browse file", command=self.select_input_file
         )
@@ -188,7 +188,7 @@ class NucleosidApplication(object):
         self.lf2.grid(sticky="ew", columnspan=2)
         self.output_file_label = tk.Label(self.lf2, text="Output file:")
         self.output_file_label.grid(row=0, column=0, sticky='w')
-        self.output_file = tk.Entry(self.lf2, width=24, bg="white")
+        self.output_file = tk.Entry(self.lf2, width=28, bg="white")
         self.output_file.grid(row=0, column=1, sticky='w')
         self.output_file_selection = tk.Button(
             self.lf2, text="Browse file", command=self.select_output_file
@@ -203,40 +203,40 @@ class NucleosidApplication(object):
         )
         self.database_location_label.grid(row=0, column=0, sticky='w')
         self.database = ttk.Combobox(
-            self.lf3, values=self.database_list, state='readonly'
+            self.lf3, values=self.database_list, state='readonly', width=26
         )
         self.database.current(6)
-        self.database.grid(row=0, column=1, sticky='w')
+        self.database.grid(row=0, column=1, sticky='w', columnspan=2)
 
         # MS Tolerance
         self.ms_tolerance_label = tk.Label(self.lf3, text="MS mass tolerance:")
         self.ms_tolerance_label.grid(row=1, column=0, sticky='w')
-        self.ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
+        self.ms_tolerance = tk.Entry(self.lf3, bg="white")
         self.ms_tolerance.insert(0, DEFAULT_MS_TOLERANCE)
-        self.ms_tolerance.grid(row=1, column=1)
+        self.ms_tolerance.grid(row=1, column=1, sticky='w')
         self.ms_tolerance_type = tk.StringVar()
         self.ms_tolerance_type = ttk.Combobox(
             self.lf3, values=self.ms_tolerance_types, state='readonly',
             width="4"
         )
         self.ms_tolerance_type.current(0)
-        self.ms_tolerance_type.grid(row=1, column=2)
+        self.ms_tolerance_type.grid(row=1, column=2, sticky='w')
 
         # MS MS Tolerance
         self.ms_ms_tolerance_label = tk.Label(
             self.lf3, text="MS/MS mass tolerance:"
         )
         self.ms_ms_tolerance_label.grid(row=2, column=0, sticky='w')
-        self.ms_ms_tolerance = tk.Entry(self.lf3, width=24, bg="white")
+        self.ms_ms_tolerance = tk.Entry(self.lf3, bg="white")
         self.ms_ms_tolerance.insert(0, DEFAULT_MS_MS_TOLERANCE)
-        self.ms_ms_tolerance.grid(row=2, column=1)
+        self.ms_ms_tolerance.grid(row=2, column=1, sticky='w')
         self.ms_ms_tolerance_type = tk.StringVar()
         self.ms_ms_tolerance_type = ttk.Combobox(
             self.lf3, values=self.ms_ms_tolerance_types, state='readonly',
             width="4"
         )
         self.ms_ms_tolerance_type.current(0)
-        self.ms_ms_tolerance_type.grid(row=2, column=2)
+        self.ms_ms_tolerance_type.grid(row=2, column=2, sticky='w')
 
         # Create the filter box
         self.lf4 = tk.LabelFrame(self.root, text="Filters")
