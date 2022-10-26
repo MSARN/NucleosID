@@ -89,10 +89,12 @@ class NucleosidApplication(object):
         """Open a simple dialog window and give some information."""
         title = "About Nucleos'ID"
         message = (
+            "Nucleos'ID - version %s\n\n"
             "Nucleos'ID is a software for untargeted identification of RNA\n"
             "post-transcriptional modifications from MS/MS acquisitions.\n\n"
-            "Further details can be obtained on:\n"
+            "Further details about this software can be obtained on:\n"
             "https://github.com/MSARN/NucleosID"
+            % VERSION
         )
         info_dialog.InfoDialog(
             self.root,
@@ -154,26 +156,32 @@ class NucleosidApplication(object):
 
     def create_widgets(self):
         """Create the widgets."""
-        # Create the header
-        self.canvas = tk.Canvas(self.root, width=128, height=128)
-        self.canvas.grid(rowspan=2)
+        # Create the left panel
+        self.left_frame = tk.Frame(self.root, bg="white", relief=tk.RIDGE, borderwidth=2)
+        self.canvas = tk.Canvas(self.left_frame, bg="white", width=128)
+        self.canvas.grid()
         logo_path = pkg_resources.resource_filename(
             'nucleosid', 'images/nucleosid-logo.png'
         )
         self.logo = tk.PhotoImage(file=logo_path)
         self.canvas.create_image(0, 0, image=self.logo, anchor="nw")
+        self.left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=5, pady=5)
+
+        # Create the header
+        self.right_frame = tk.Frame(self.root)
+        self.right_frame.pack()
         self.title = tk.Label(
-            self.root, text=NAME, font=("Arial 24 bold"),
+            self.right_frame, text=NAME, font=("Arial 24 bold")
         )
-        self.title.grid(row=0, column=1)
+        self.title.pack(padx=8, pady=8)
         self.description = tk.Label(
-            self.root, text=DESCRIPTION
+            self.right_frame, text=DESCRIPTION, font=("Arial 12 italic")
         )
-        self.description.grid(row=1, column=1)
+        self.description.pack(padx=5, pady=5)
 
         # Create the input box
-        self.lf1 = tk.LabelFrame(self.root, text="Input")
-        self.lf1.grid(sticky="ew", columnspan=2)
+        self.lf1 = tk.LabelFrame(self.right_frame, text="Input")
+        self.lf1.pack(fill=tk.X, padx=5, pady=5)
         self.input_file_label = tk.Label(self.lf1, text="Input file:")
         self.input_file_label.grid(row=0, column=0, sticky='w')
         self.input_file = tk.Entry(self.lf1, width=28, bg="white")
@@ -184,8 +192,8 @@ class NucleosidApplication(object):
         self.input_file_selection.grid(row=0, column=2)
 
         # Create the output box
-        self.lf2 = tk.LabelFrame(self.root, text="Output")
-        self.lf2.grid(sticky="ew", columnspan=2)
+        self.lf2 = tk.LabelFrame(self.right_frame, text="Output")
+        self.lf2.pack(fill=tk.X, padx=5, pady=5)
         self.output_file_label = tk.Label(self.lf2, text="Output file:")
         self.output_file_label.grid(row=0, column=0, sticky='w')
         self.output_file = tk.Entry(self.lf2, width=28, bg="white")
@@ -196,8 +204,8 @@ class NucleosidApplication(object):
         self.output_file_selection.grid(row=0, column=2)
 
         # Create the settings box
-        self.lf3 = tk.LabelFrame(self.root, text="Settings")
-        self.lf3.grid(sticky="ew", columnspan=2)
+        self.lf3 = tk.LabelFrame(self.right_frame, text="Settings")
+        self.lf3.pack(fill=tk.X, padx=5, pady=5)
         self.database_location_label = tk.Label(
             self.lf3, text="Database:"
         )
@@ -207,7 +215,6 @@ class NucleosidApplication(object):
         )
         self.database.current(6)
         self.database.grid(row=0, column=1, sticky='w', columnspan=2)
-
         # MS Tolerance
         self.ms_tolerance_label = tk.Label(self.lf3, text="MS mass tolerance:")
         self.ms_tolerance_label.grid(row=1, column=0, sticky='w')
@@ -221,7 +228,6 @@ class NucleosidApplication(object):
         )
         self.ms_tolerance_type.current(0)
         self.ms_tolerance_type.grid(row=1, column=2, sticky='w')
-
         # MS MS Tolerance
         self.ms_ms_tolerance_label = tk.Label(
             self.lf3, text="MS/MS mass tolerance:"
@@ -239,8 +245,8 @@ class NucleosidApplication(object):
         self.ms_ms_tolerance_type.grid(row=2, column=2, sticky='w')
 
         # Create the filter box
-        self.lf4 = tk.LabelFrame(self.root, text="Filters")
-        self.lf4.grid(sticky="ew", columnspan=2)
+        self.lf4 = tk.LabelFrame(self.right_frame, text="Filters")
+        self.lf4.pack(fill=tk.X, padx=5, pady=5)
         # Intensity threshold
         self.ms_ms_intensity_threshold_label = tk.Label(
             self.lf4, text="MS/MS intensity threshold:"
@@ -278,8 +284,8 @@ class NucleosidApplication(object):
         self.exclusion_time_unit.grid(row=2, column=2, sticky='w')
 
         # Create the buttons
-        self.lf5 = tk.Frame(self.root)
-        self.lf5.grid(columnspan=2)
+        self.lf5 = tk.Frame(self.right_frame)
+        self.lf5.pack(expand=True, padx=5, pady=5)
         self.run_button = tk.Button(
             self.lf5, text='Analyze',
             command=self.analyze
@@ -292,7 +298,7 @@ class NucleosidApplication(object):
         self.help_button.pack(side='left')
         self.quit_button = tk.Button(
             self.lf5, text='Quit',
-            command=self.root.quit
+            command=self.right_frame.quit
         )
         self.quit_button.pack(side='left')
 
