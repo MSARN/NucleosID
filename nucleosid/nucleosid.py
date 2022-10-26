@@ -31,7 +31,7 @@ from nucleosid import info_dialog
 NAME = "Nucleos'ID"
 DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
               "nucleosides level."
-VERSION = '0.9.0'
+VERSION = '1.0.0'
 DEFAULT_THRESHOLD_INTENSITY = 0
 DEFAULT_MS_TOLERANCE = 0.02
 DEFAULT_MS_MS_TOLERANCE = 0.5
