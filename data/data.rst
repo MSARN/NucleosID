@@ -1,8 +1,9 @@
 Nucleos'ID data
 ===============
 
-The data stored in this directory can be used to check that the
-software is working correctly in your environment.
+The data stored in the ``data`` directory of the Nucleos'ID project
+can be used to check that the software is working correctly in your
+environment.
 
 
 Input data
