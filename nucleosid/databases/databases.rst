@@ -26,15 +26,15 @@ https://iimcb.genesilico.pl/modomics/download
 References
 ----------
 
-#. Boccaletto, P., Stefaniak, F.; Ray, A.; Cappannini, A.; Mukherjee, S.;
-   Purta, E., Kurkowska, M.; Shirvanizadeh, N.; Destefanis, E.; Groza, P.;
-   Avşar, G., Romitelli, A.; Pir, P.; Dassi, E.; Conticello, S. G.;
+#. Boccaletto, P., Stefaniak, F., Ray, A., Cappannini, A., Mukherjee, S.,
+   Purta, E., Kurkowska, M., Shirvanizadeh, N., Destefanis, E., Groza, P.,
+   Avşar, G., Romitelli, A., Pir, P., Dassi, E., Conticello, S. G.,
    Aguilo, F. & Bujnicki, J. M. MODOMICS: A Database of RNA Modification
    Pathways. 2021 Update. *Nucleic Acids Res.* **2022**, *50* (D1),
    D231–D235.
 
-#. McCown, P. J., Ruszkowska, A.; Kunkler, C. N.; Breger, K.; Hulewicz
-   J. P., Wang M. C.; Springer N. A. & Brown J. A. Naturally Occurring
+#. McCown, P. J., Ruszkowska, A., Kunkler, C. N., Breger, K., Hulewicz
+   J. P., Wang M. C., Springer N. A. & Brown J. A. Naturally Occurring
    Modified Ribonucleosides. *WIREs RNA* **2020**, *11* (5), e1595.
 
 #. Grosjean, H. Nucleic Acids Are Not Boring Long Polymers of Only Four
