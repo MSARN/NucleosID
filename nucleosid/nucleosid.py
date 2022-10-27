@@ -157,7 +157,7 @@ class NucleosidApplication(object):
     def create_widgets(self):
         """Create the widgets."""
         # Create the left panel
-        self.left_frame = tk.Frame(self.root, bg="white", relief=tk.RIDGE, borderwidth=2)
+        self.left_frame = tk.Frame(self.root, bg="white", relief='ridge', borderwidth=2)
         self.canvas = tk.Canvas(
             self.left_frame, bg="white",
             width=128, highlightthickness=0
@@ -168,7 +168,7 @@ class NucleosidApplication(object):
         )
         self.logo = tk.PhotoImage(file=logo_path)
         self.canvas.create_image(0, 0, image=self.logo, anchor="nw")
-        self.left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=5, pady=5)
+        self.left_frame.pack(side='left', fill='y', padx=5, pady=5)
 
         # Create the header
         self.right_frame = tk.Frame(self.root)
@@ -184,7 +184,7 @@ class NucleosidApplication(object):
 
         # Create the input box
         self.lf1 = tk.LabelFrame(self.right_frame, text="Input")
-        self.lf1.pack(fill=tk.X, padx=5, pady=5)
+        self.lf1.pack(fill='x', padx=5, pady=5)
         self.input_file_label = tk.Label(self.lf1, text="Input file:")
         self.input_file_label.grid(row=0, column=0, sticky='w')
         self.input_file = tk.Entry(self.lf1, width=32, bg="white")
@@ -196,7 +196,7 @@ class NucleosidApplication(object):
 
         # Create the output box
         self.lf2 = tk.LabelFrame(self.right_frame, text="Output")
-        self.lf2.pack(fill=tk.X, padx=5, pady=5)
+        self.lf2.pack(fill='x', padx=5, pady=5)
         self.output_file_label = tk.Label(self.lf2, text="Output file:")
         self.output_file_label.grid(row=0, column=0, sticky='w')
         self.output_file = tk.Entry(self.lf2, width=32, bg="white")
@@ -208,7 +208,7 @@ class NucleosidApplication(object):
 
         # Create the settings box
         self.lf3 = tk.LabelFrame(self.right_frame, text="Settings")
-        self.lf3.pack(fill=tk.X, padx=5, pady=5)
+        self.lf3.pack(fill='x', padx=5, pady=5)
         self.database_location_label = tk.Label(
             self.lf3, text="Database:"
         )
@@ -233,7 +233,7 @@ class NucleosidApplication(object):
             width="4"
         )
         self.ms_tolerance_type.current(0)
-        self.ms_tolerance_type.pack(side='right')
+        self.ms_tolerance_type.pack(side='right', padx=1)
 
         # MS MS Tolerance
         self.ms_ms_tolerance_label = tk.Label(
@@ -252,11 +252,11 @@ class NucleosidApplication(object):
             state='readonly', width="4"
         )
         self.ms_ms_tolerance_type.current(0)
-        self.ms_ms_tolerance_type.pack(side='right')
+        self.ms_ms_tolerance_type.pack(side='right', padx=1)
 
         # Create the filter box
         self.lf4 = tk.LabelFrame(self.right_frame, text="Filters")
-        self.lf4.pack(fill=tk.X, padx=5, pady=5)
+        self.lf4.pack(fill='x', padx=5, pady=5)
         # Intensity threshold
         self.ms_ms_intensity_threshold_label = tk.Label(
             self.lf4, text="MS/MS intensity threshold:"
@@ -268,7 +268,7 @@ class NucleosidApplication(object):
         self.ms_ms_intensity_threshold.insert(0, DEFAULT_THRESHOLD_INTENSITY)
         self.ms_ms_intensity_threshold.grid(row=0, column=1)
         self.ms_ms_intensity_threshold_unit = tk.Label(self.lf4, text="AU")
-        self.ms_ms_intensity_threshold_unit.grid(row=0, column=2, sticky='w')
+        self.ms_ms_intensity_threshold_unit.grid(row=0, column=2, sticky='w', padx=1)
 
         # MS MS score threshold
         self.ms_ms_score_threshold_label = tk.Label(
@@ -281,7 +281,7 @@ class NucleosidApplication(object):
         self.ms_ms_score_threshold.insert(0, DEFAULT_MS_MS_SCORE_THRESHOLD)
         self.ms_ms_score_threshold.grid(row=1, column=1)
         self.ms_ms_score_threshold_unit = tk.Label(self.lf4, text="%")
-        self.ms_ms_score_threshold_unit.grid(row=1, column=2, sticky='w')
+        self.ms_ms_score_threshold_unit.grid(row=1, column=2, sticky='w', padx=1)
 
         # Exclusion time
         self.exclusion_time_label = tk.Label(
@@ -295,7 +295,7 @@ class NucleosidApplication(object):
         self.exclusion_time.insert(0, DEFAULT_EXCLUSION_TIME)
         self.exclusion_time.grid(row=2, column=1)
         self.exclusion_time_unit = tk.Label(self.lf4, text="s")
-        self.exclusion_time_unit.grid(row=2, column=2, sticky='w')
+        self.exclusion_time_unit.grid(row=2, column=2, sticky='w', padx=1)
 
         # Create the buttons
         self.lf5 = tk.Frame(self.right_frame)
