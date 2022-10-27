@@ -33,11 +33,16 @@ Prerequisites
 +++++++++++++
 
 If you are installing from source, you will need:
+
 * `Python 3 <https://www.python.org/>`_
+
 * A `git <https://git-scm.com/>`_ client
 
 To get the source, clone the last version of Nucleos'ID repository:
-`git clone https://github.com/MSARN/NucleosID.git`
+
+.. code-block::
+
+   git clone https://github.com/MSARN/NucleosID.git
 
 Install the software
 ++++++++++++++++++++
