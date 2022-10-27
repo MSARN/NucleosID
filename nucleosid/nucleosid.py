@@ -157,7 +157,9 @@ class NucleosidApplication(object):
     def create_widgets(self):
         """Create the widgets."""
         # Create the left panel
-        self.left_frame = tk.Frame(self.root, bg="white", relief='ridge', borderwidth=2)
+        self.left_frame = tk.Frame(
+            self.root, bg="white", relief='ridge', borderwidth=2
+        )
         self.canvas = tk.Canvas(
             self.left_frame, bg="white",
             width=128, highlightthickness=0
@@ -188,11 +190,11 @@ class NucleosidApplication(object):
         self.input_file_label = tk.Label(self.lf1, text="Input file:")
         self.input_file_label.grid(row=0, column=0, sticky='w')
         self.input_file = tk.Entry(self.lf1, width=32, bg="white")
-        self.input_file.grid(row=0, column=1, sticky='w')
+        self.input_file.grid(row=0, column=1, sticky='w', padx=2, pady=2)
         self.input_file_selection = tk.Button(
             self.lf1, text="Browse file", command=self.select_input_file
         )
-        self.input_file_selection.grid(row=0, column=2)
+        self.input_file_selection.grid(row=0, column=2, padx=2, pady=2)
 
         # Create the output box
         self.lf2 = tk.LabelFrame(self.right_frame, text="Output")
@@ -200,11 +202,11 @@ class NucleosidApplication(object):
         self.output_file_label = tk.Label(self.lf2, text="Output file:")
         self.output_file_label.grid(row=0, column=0, sticky='w')
         self.output_file = tk.Entry(self.lf2, width=32, bg="white")
-        self.output_file.grid(row=0, column=1, sticky='w')
+        self.output_file.grid(row=0, column=1, sticky='w', padx=2, pady=2)
         self.output_file_selection = tk.Button(
             self.lf2, text="Browse file", command=self.select_output_file
         )
-        self.output_file_selection.grid(row=0, column=2)
+        self.output_file_selection.grid(row=0, column=2, padx=2, pady=2)
 
         # Create the settings box
         self.lf3 = tk.LabelFrame(self.right_frame, text="Settings")
@@ -217,31 +219,39 @@ class NucleosidApplication(object):
             self.lf3, values=self.database_list, state='readonly', width=27
         )
         self.database.current(6)
-        self.database.grid(row=0, column=1, sticky='w')
+        self.database.grid(row=0, column=1, sticky='w', padx=2, pady=2)
         # MS Tolerance
         self.ms_tolerance_label = tk.Label(self.lf3, text="MS mass tolerance:")
-        self.ms_tolerance_label.grid(row=1, column=0, sticky='w')
+        self.ms_tolerance_label.grid(
+            row=1, column=0, sticky='w', padx=2, pady=2
+        )
         self.ms_tolerance_frame = tk.Frame(self.lf3)
-        self.ms_tolerance_frame.grid(row=1, column=1, sticky='w')
+        self.ms_tolerance_frame.grid(
+            row=1, column=1, sticky='w', padx=2, pady=2
+        )
         self.ms_tolerance = tk.Entry(
             self.ms_tolerance_frame, width="6", bg="white", justify="right"
         )
         self.ms_tolerance.insert(0, DEFAULT_MS_TOLERANCE)
         self.ms_tolerance.pack(side='left')
         self.ms_tolerance_type = ttk.Combobox(
-            self.ms_tolerance_frame, values=self.ms_tolerance_types, state='readonly',
-            width="4"
+            self.ms_tolerance_frame, values=self.ms_tolerance_types,
+            state='readonly', width="4"
         )
         self.ms_tolerance_type.current(0)
-        self.ms_tolerance_type.pack(side='right', padx=1)
+        self.ms_tolerance_type.pack(side='right', padx=2)
 
         # MS MS Tolerance
         self.ms_ms_tolerance_label = tk.Label(
             self.lf3, text="MS/MS mass tolerance:"
         )
-        self.ms_ms_tolerance_label.grid(row=2, column=0, sticky='w')
+        self.ms_ms_tolerance_label.grid(
+            row=2, column=0, sticky='w', padx=2, pady=2
+        )
         self.ms_ms_tolerance_frame = tk.Frame(self.lf3)
-        self.ms_ms_tolerance_frame.grid(row=2, column=1, sticky='w')
+        self.ms_ms_tolerance_frame.grid(
+            row=2, column=1, sticky='w', padx=2, pady=2
+        )
         self.ms_ms_tolerance = tk.Entry(
             self.ms_ms_tolerance_frame, width="6", bg="white", justify="right"
         )
@@ -252,7 +262,7 @@ class NucleosidApplication(object):
             state='readonly', width="4"
         )
         self.ms_ms_tolerance_type.current(0)
-        self.ms_ms_tolerance_type.pack(side='right', padx=1)
+        self.ms_ms_tolerance_type.pack(side='right', padx=2)
 
         # Create the filter box
         self.lf4 = tk.LabelFrame(self.right_frame, text="Filters")
@@ -266,36 +276,43 @@ class NucleosidApplication(object):
             self.lf4, width=6, bg="white", justify="right"
         )
         self.ms_ms_intensity_threshold.insert(0, DEFAULT_THRESHOLD_INTENSITY)
-        self.ms_ms_intensity_threshold.grid(row=0, column=1)
+        self.ms_ms_intensity_threshold.grid(row=0, column=1, padx=2, pady=2)
         self.ms_ms_intensity_threshold_unit = tk.Label(self.lf4, text="AU")
-        self.ms_ms_intensity_threshold_unit.grid(row=0, column=2, sticky='w', padx=1)
-
+        self.ms_ms_intensity_threshold_unit.grid(
+            row=0, column=2, sticky='w', padx=2, pady=2
+        )
         # MS MS score threshold
         self.ms_ms_score_threshold_label = tk.Label(
             self.lf4, text="MS/MS score threshold:"
         )
-        self.ms_ms_score_threshold_label.grid(row=1, column=0, sticky='w')
+        self.ms_ms_score_threshold_label.grid(
+            row=1, column=0, sticky='w', padx=2, pady=2
+        )
         self.ms_ms_score_threshold = tk.Entry(
             self.lf4, width=6, bg="white", justify="right"
         )
         self.ms_ms_score_threshold.insert(0, DEFAULT_MS_MS_SCORE_THRESHOLD)
-        self.ms_ms_score_threshold.grid(row=1, column=1)
+        self.ms_ms_score_threshold.grid(row=1, column=1, padx=2, pady=2)
         self.ms_ms_score_threshold_unit = tk.Label(self.lf4, text="%")
-        self.ms_ms_score_threshold_unit.grid(row=1, column=2, sticky='w', padx=1)
-
+        self.ms_ms_score_threshold_unit.grid(
+            row=1, column=2, sticky='w', padx=2, pady=2
+        )
         # Exclusion time
         self.exclusion_time_label = tk.Label(
             self.lf4, text="Exclusion time:"
         )
-
-        self.exclusion_time_label.grid(row=2, column=0, sticky='w')
+        self.exclusion_time_label.grid(
+            row=2, column=0, sticky='w', padx=2, pady=2
+        )
         self.exclusion_time = tk.Entry(
             self.lf4, width=6, bg="white", justify="right"
         )
         self.exclusion_time.insert(0, DEFAULT_EXCLUSION_TIME)
-        self.exclusion_time.grid(row=2, column=1)
+        self.exclusion_time.grid(row=2, column=1, padx=2, pady=2)
         self.exclusion_time_unit = tk.Label(self.lf4, text="s")
-        self.exclusion_time_unit.grid(row=2, column=2, sticky='w', padx=1)
+        self.exclusion_time_unit.grid(
+            row=2, column=2, sticky='w', padx=2, pady=2
+        )
 
         # Create the buttons
         self.lf5 = tk.Frame(self.right_frame)
@@ -304,17 +321,17 @@ class NucleosidApplication(object):
             self.lf5, text='Analyze',
             command=self.analyze
         )
-        self.run_button.pack(side='left')
+        self.run_button.pack(side='left', padx=5, pady=2)
         self.help_button = tk.Button(
             self.lf5, text='About',
             command=self.show_about
         )
-        self.help_button.pack(side='left')
+        self.help_button.pack(side='left', padx=5, pady=2)
         self.quit_button = tk.Button(
             self.lf5, text='Quit',
             command=self.right_frame.quit
         )
-        self.quit_button.pack(side='left')
+        self.quit_button.pack(side='left', padx=5, pady=2)
 
 
 def main():
