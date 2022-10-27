@@ -66,6 +66,21 @@ Bug tracker
 If you have any suggestions, bug reports, or annoyances please report
 them to our issue tracker at https://github.com/MSARN/NucleosID/issues.
 
+Citation
+========
+
+As part of the research process, it is important that pieces of software
+that have contributed to the research are cited. You can cite Nucleos'ID
+with the following text:
+
+The Nucleos'ID software has been used to identify post-transcriptional
+modifications. The source code is available on GitHub[1] and archived in Zenodo[2].
+
+#. Supplementary materials: https://github.com/cetoolbox/cetoolbox
+
+#. Didierjean, M., Gosset-Erard, C. François, Y. & Pansanel, J. Nucleos'ID v1.0.0.
+   *Zenodo* **2022**, https://doi.org/10.5281/zenodo.7223373
+
 
 License
 =======
