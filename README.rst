@@ -1,4 +1,6 @@
-.. image:: https://github.com/MSARN/NucleosID/raw/main/nucleosid/images/nucleosid-logo.png 
+==========
+Nucleos'ID
+==========
 
 |doi| |license|
 
@@ -8,13 +10,11 @@
 :Keywords: scientific software, RNA, mass spectrometry, nucleoside,
     python
 
-==========
-Nucleos'ID
-==========
-
 Nucleos'ID is a Python-based software to identify post-transcriptional modifications
 of RNA at the nucleoside level.
 
+.. image:: https://github.com/MSARN/NucleosID/raw/main/nucleosid/images/nucleosid-logo.png 
+   :align: center
 
 Installation
 ============
