@@ -1,0 +1,27 @@
+{
+    "license": {
+      "id": "Apache-2.0"
+    }, 
+    "creators": [
+        {
+            "affiliation": "LSMIS", 
+            "name": "M\u00e9vie Didierjean"
+        }, 
+        {
+            "orcid": "0000-0001-8285-8438", 
+            "affiliation": "LSMIS", 
+            "name": "Clarisse Gosset-Erard"
+        }, 
+        {
+            "orcid": "0000-0002-8776-071X", 
+            "affiliation": "LSMIS", 
+            "name": "Yannis Fran\u00e7ois"
+        }, 
+        {
+            "orcid": "0000-0002-7067-5009", 
+            "affiliation": "IPHC", 
+            "name": "J\u00e9r\u00f4me Pansanel"
+        }
+    ], 
+    "access_right": "open"
+}
