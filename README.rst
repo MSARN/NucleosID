@@ -76,7 +76,7 @@ with the following text:
 The Nucleos'ID software has been used to identify post-transcriptional
 modifications. The source code is available on GitHub[1] and archived in Zenodo[2].
 
-#. Supplementary materials: https://github.com/cetoolbox/cetoolbox
+#. https://github.com/MSARN/NucleosID
 
 #. Didierjean, M., Gosset-Erard, C. François, Y. & Pansanel, J. Nucleos'ID v1.0.0.
    *Zenodo* **2022**, https://doi.org/10.5281/zenodo.7223373
