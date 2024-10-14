@@ -2,18 +2,16 @@
 Nucleos'ID
 ==========
 
-|doi| |license|
+|doi| |license| |OpenSSF Best Practices|
+
+.. |OpenSSF Best Practices| image:: https://www.bestpractices.dev/projects/9547/badge
+   :target: https://www.bestpractices.dev/projects/9547
 
 :Version: 1.0.0
 :Download: https://github.com/MSARN/NucleosID/releases
 :Source: https://github.com/MSARN/NucleosID
 :Keywords: scientific software, RNA, mass spectrometry, nucleoside,
     python
-
-|OpenSSF Best Practices|
-
-.. |OpenSSF Best Practices| image:: https://www.bestpractices.dev/projects/9547/badge
-   :target: https://www.bestpractices.dev/projects/9547
 
 Nucleos'ID is a Python-based software to identify post-transcriptional modifications
 of RNA at the nucleoside level.
