@@ -17,16 +17,16 @@
 
 """Module to manage the application."""
 
+import pkg_resources
+import tkinter as tk
 import tkinter.filedialog as filedialog
 from tkinter import ttk
-import tkinter as tk
-import pkg_resources
 
 from nucleosid import analysis_writer
+from nucleosid import info_dialog
+from nucleosid import mgf_data_analyzer
 from nucleosid import mgf_parser
 from nucleosid import modification_database_parser as db_parser
-from nucleosid import mgf_data_analyzer
-from nucleosid import info_dialog
 
 NAME = "Nucleos'ID"
 DESCRIPTION = "Identifies RNA post-transcriptionnal modifications at " + \
@@ -335,8 +335,7 @@ class NucleosidApplication(object):
 
 
 def main():
-    """
-    Analzyzes Main function for the Nucleos'ID application. Handles command.
+    """Analzyzes Main function for the Nucleos'ID application. Handles command.
 
     line arguments and loads configuration before launching the
     application window.
