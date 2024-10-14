@@ -17,6 +17,7 @@ with open("README.rst", "rb") as f:
 with open('requirements.txt') as requirements:
     install_requires = requirements.read()
 
+
 def package_files(directory):
     paths = []
     for (path, directories, filenames) in os.walk(directory):

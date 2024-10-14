@@ -27,7 +27,8 @@ class MGFDataAnalyzer(object):
         self.ms_tolerance_type = analysis_parameters['ms_tolerance_type']
         self.ms_ms_tolerance_type = analysis_parameters['ms_ms_tolerance_type']
         self.ms_ms_tolerance = analysis_parameters['ms_ms_tolerance']
-        self.ms_ms_score_threshold = analysis_parameters['ms_ms_score_threshold']
+        self.ms_ms_score_threshold = analysis_parameters[
+            'ms_ms_score_threshold']
         self.exclusion_time = analysis_parameters['exclusion_time']
         """Initialize the SpectrumAnalyzer class."""
         self.ms_ms_spectra = ms_ms_spectra
@@ -52,27 +53,38 @@ class MGFDataAnalyzer(object):
             for mod_name in self.arn_modifications:
                 modified_mass = self.arn_modifications[mod_name]['ms_value']
                 if self.ms_tolerance_type == 'ppm':
-                    delta = abs(exact_mass - modified_mass)/modified_mass * 1000000
+                    delta = (
+                        abs(exact_mass - modified_mass)
+                        / modified_mass
+                        * 1000000
+                    )
                 else:
                     delta = abs(exact_mass - modified_mass)
                 if delta <= self.ms_tolerance:
                     # A matching mass has been found
                     peaks = spectrum.get_peaks()
                     matching_peaks = {}
-                    modified_frag_masses = self.arn_modifications[mod_name]['ms_ms_values']
+                    modified_frag_masses = self.arn_modifications[
+                        mod_name]['ms_ms_values']
                     max_intensity = 0
-                    # Max intensity for the current modification matching a fragment
-                    # spectrum
+                    # Max intensity for the current modification
+                    # matching a fragment spectrum
                     mfrag_intensity = 0
                     for (frag_mass, intensity) in peaks:
                         max_intensity = max(max_intensity, intensity)
                         for modified_frag_mass in modified_frag_masses:
                             if self.ms_ms_tolerance_type == 'ppm':
-                                diff = abs(frag_mass - modified_frag_mass) / modified_frag_mass * 1000000
+                                diff = (
+                                    abs(frag_mass - modified_frag_mass)
+                                    / modified_frag_mass
+                                    * 1000000
+                                )
                             else:
                                 diff = abs(frag_mass - modified_frag_mass)
                             if diff <= self.ms_ms_tolerance:
-                                mfrag_intensity = max(intensity, mfrag_intensity)
+                                mfrag_intensity = max(
+                                    intensity, mfrag_intensity
+                                )
                                 if modified_frag_mass not in matching_peaks:
                                     # We need to register intensity as we only
                                     # store the frag_mass with the higher
@@ -84,7 +96,8 @@ class MGFDataAnalyzer(object):
                                 else:
                                     # A peak for this fragment has already
                                     # been found
-                                    if intensity > matching_peaks[modified_frag_mass][1]:
+                                    if intensity > matching_peaks[
+                                            modified_frag_mass][1]:
                                         matching_peaks[modified_frag_mass] = (
                                             frag_mass, intensity
                                         )
@@ -105,8 +118,12 @@ class MGFDataAnalyzer(object):
                         else:
                             score = frag_max_intensity / max_intensity
                         if (score * 100) >= self.ms_ms_score_threshold:
-                            matching_masses = ';'.join([str(x) for x in frag_masses])
-                            mod_frag_masses = ';'.join([str(y) for y in modified_frag_masses])
+                            matching_masses = ';'.join(
+                                [str(x) for x in frag_masses]
+                            )
+                            mod_frag_masses = ';'.join(
+                                [str(y) for y in modified_frag_masses]
+                            )
                             if mod_name not in matching_modifications:
                                 matching_modifications[mod_name] = []
 
@@ -154,15 +171,18 @@ class MGFDataAnalyzer(object):
                     ]
                 else:
                     cursor = len(filtered_modifications[mod_name]) - 1
-                    previous_time = filtered_modifications[mod_name][cursor]['rtinseconds']
+                    previous_time = filtered_modifications[mod_name][
+                        cursor]['rtinseconds']
                     if previous_time > (window_start + self.exclusion_time):
                         window_start = previous_time
                     current_time = modification['rtinseconds']
                     if abs(current_time - window_start) <= self.exclusion_time:
                         # Select the peak with the highst intensity
                         if modification['intensity'] > \
-                                filtered_modifications[mod_name][cursor]['intensity']:
-                            filtered_modifications[mod_name][cursor] = modification
+                                filtered_modifications[mod_name][
+                                    cursor]['intensity']:
+                            filtered_modifications[mod_name][cursor] = \
+                                modification
                     else:
                         filtered_modifications[mod_name].append(
                             modification

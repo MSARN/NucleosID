@@ -164,6 +164,3 @@ texinfo_documents = [
      author, 'Nucleos\'ID', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
