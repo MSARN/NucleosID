@@ -2,7 +2,10 @@
 Nucleos'ID
 ==========
 
-|doi| |license|
+|doi| |license| |OpenSSF Best Practices|
+
+.. |OpenSSF Best Practices| image:: https://www.bestpractices.dev/projects/9547/badge
+   :target: https://www.bestpractices.dev/projects/9547
 
 :Version: 1.0.0
 :Download: https://github.com/MSARN/NucleosID/releases
