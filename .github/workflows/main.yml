@@ -3,11 +3,11 @@ name: Python application
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ main ]
   workflow_dispatch:
-    branches: [ master ]
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -37,5 +37,5 @@ jobs:
         flake8 nucleosid --count --exit-zero --max-complexity=20 --statistics
     - name: Test with pytest
       run: |
-        pytest --cov-report term --cov=nucleosid
+        pytest tests --cov-report term --cov=nucleosid
 
