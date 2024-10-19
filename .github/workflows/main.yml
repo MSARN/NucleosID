@@ -28,6 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install hacking
         pip install pytest
+        pip install pytest-cov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8 (hacking)
       run: |
@@ -37,5 +38,5 @@ jobs:
         flake8 nucleosid --count --exit-zero --max-complexity=20 --statistics
     - name: Test with pytest
       run: |
-        pytest tests --cov-report term --cov=nucleosid
+        pytest tests --cov-report=term --cov=nucleosid
 
