@@ -14,6 +14,7 @@
 
 """Analysis writer test class."""
 
+import os
 import pandas as pd
 import pytest
 
@@ -21,7 +22,7 @@ from nucleosid import analysis_writer
 
 
 @pytest.fixture(scope="session")
-def test_write_analysis():
+def test_write_analysis(tmpdir_factory):
     """Test the write_analysis function."""
     data = pd.DataFrame({
         'Modification': pd.Series(dtype='str'),
@@ -34,9 +35,9 @@ def test_write_analysis():
     })
 
     writer = analysis_writer.AnalysisWriter(data)
-    output_file = tmp_factory.mktemp("data").join("test.csv")
-    writer.write(output_file)
-    assert os.path.isfile(output_file) == True
-    output_file = tmp_factory.mktemp("data").join("test.xlsx")
-    writer.write(output_file)
-    assert os.path.isfile(output_file) == True
+    output_file = tmpdir_factory.mktemp("data").join("test.csv")
+    writer.write_analysis(output_file)
+    assert os.path.isfile(output_file)
+    output_file = tmpdir_factory.mktemp("data").join("test.xlsx")
+    writer.write_analysis(output_file)
+    assert os.path.isfile(output_file)
