@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 
 
-class ModificationDatabaseParser(object):
+class ModificationDatabaseParser:
     """A class for parsing an ARN modification database file."""
 
     COLUMN_TYPES = {
@@ -30,7 +30,7 @@ class ModificationDatabaseParser(object):
     def __init__(self, database_file):
         """Initialize the DatabaseParser class."""
         self.modification_database = {}
-        with open(database_file) as database:
+        with open(database_file, encoding="utf-8") as database:
             database_df = pd.read_csv(database)
             if self.verify_database_structure(database_df):
                 self._parse_database(database_df)
@@ -40,7 +40,7 @@ class ModificationDatabaseParser(object):
         if len(data.dtypes) != len(self.COLUMN_TYPES):
             return False
         for column in data.columns:
-            if str(column) not in self.COLUMN_TYPES.keys():
+            if str(column) not in self.COLUMN_TYPES:
                 return False
             if data.dtypes[column] != self.COLUMN_TYPES[column]:
                 return False

@@ -17,7 +17,7 @@
 import pandas as pd
 
 
-class MGFDataAnalyzer(object):
+class MGFDataAnalyzer:
     """A class for analysing MGF data and finding RNA modifications."""
 
     def __init__(self, ms_ms_spectra, arn_modifications, analysis_parameters):
@@ -106,12 +106,12 @@ class MGFDataAnalyzer(object):
                         frag_max_intensity = 0
                         frag_masses = []
                         # Compute the score for each result
-                        for key_mass in matching_peaks:
+                        for mass_values in matching_peaks.values():
                             frag_max_intensity = max(
-                                matching_peaks[key_mass][1],
+                                mass_values[1],
                                 frag_max_intensity
                             )
-                            frag_masses.append(matching_peaks[key_mass][0])
+                            frag_masses.append(mass_values[0])
 
                         if max_intensity == 0:
                             score = 0
@@ -144,8 +144,8 @@ class MGFDataAnalyzer(object):
         filtered_hit_number = 0
 
         # Only modification where ms ms match is added!
-        for modification_type in filtered_modifications:
-            for modification in filtered_modifications[modification_type]:
+        for modification_type, values in filtered_modifications.items():
+            for modification in values:
                 # Add the missing analysis value
                 filtered_hit_number += 1
                 self.arn_analysis.loc[len(self.arn_analysis.index)] = [

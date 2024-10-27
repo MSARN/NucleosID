@@ -15,7 +15,7 @@
 """This module contains a simple class for managing MS/MS spectrum."""
 
 
-class MSMSSpectrum(object):
+class MSMSSpectrum:
     """A class for managing MS/MS spectrum."""
 
     def __init__(self, title=None):
