@@ -27,11 +27,11 @@ class AnalysisWriter(object):
     def write_analysis(self, filename, filetype="csv"):
         """Analyse ARN modifications in the spectrum."""
         if filetype == 'xlsx':
-            self.write_xlsx_output(filename)
+            self.__write_xlsx_output(filename)
         else:
-            self.write_csv_output(filename)
+            self.__write_csv_output(filename)
 
-    def write_csv_output(self, filename):
+    def __write_csv_output(self, filename):
         """Write results as a CSV file."""
         self.data.sort_values('Detection time (s)', inplace=True)
         if filename[-4:] != '.csv':
@@ -41,7 +41,7 @@ class AnalysisWriter(object):
             filename, index=False, float_format='%.7g'
         )
 
-    def write_xlsx_output(self, filename):
+    def __write_xlsx_output(self, filename):
         """Write results as an excel file."""
         if filename[-5:] != '.xlsx':
             # Add the right extension

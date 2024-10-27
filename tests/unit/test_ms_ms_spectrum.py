@@ -51,3 +51,29 @@ def test_append_peak():
     spectrum.append_peak("A")
     spectrum.append_peak("B")
     assert len(spectrum.peaks) == 2
+
+
+def test_get_exact_mass():
+    """Test the get_exact_mass function."""
+    spectrum = ms_ms_spectrum.MSMSSpectrum()
+    spectrum.pepmass = 3.14
+    exact_mass = spectrum.get_exact_mass()
+    assert isinstance(exact_mass, float)
+    assert exact_mass == 3.14
+
+def test_get_rtinseconds():
+    """Test the get_rtinseconds function."""
+    spectrum = ms_ms_spectrum.MSMSSpectrum()
+    spectrum.rtinseconds = 6.18
+    rtinseconds = spectrum.get_rtinseconds()
+    assert isinstance(rtinseconds, float)
+    assert rtinseconds == 6.18
+
+
+def test_get_peaks():
+    """Test the get_peak function."""
+    spectrum = ms_ms_spectrum.MSMSSpectrum()
+    spectrum.peaks = ['A', 'B']
+    peak_list = spectrum.get_peaks()
+    assert isinstance(peak_list, list)
+    assert peak_list == ['A', 'B']
