@@ -17,10 +17,11 @@
 
 """Module to manage the application."""
 
-import pkg_resources
 import tkinter as tk
-import tkinter.filedialog as filedialog
+from tkinter import filedialog
 from tkinter import ttk
+
+import pkg_resources
 
 from nucleosid import analysis_writer
 from nucleosid import info_dialog
@@ -39,7 +40,7 @@ DEFAULT_MS_MS_SCORE_THRESHOLD = 20
 DEFAULT_EXCLUSION_TIME = 60
 
 
-class NucleosidApplication(object):
+class NucleosidApplication:
     """This class permits to manage the NucleosID Tk Interface."""
 
     def __init__(self):
@@ -89,12 +90,11 @@ class NucleosidApplication(object):
         """Open a simple dialog window and give some information."""
         title = "About Nucleos'ID"
         message = (
-            "Nucleos'ID - version %s\n\n"
+            f"Nucleos'ID - version {VERSION}\n\n"
             "Nucleos'ID is a software for untargeted identification of RNA\n"
             "post-transcriptional modifications from MS/MS acquisitions.\n\n"
             "Further details about this software can be obtained on:\n"
             "https://github.com/MSARN/NucleosID"
-            % VERSION
         )
         info_dialog.InfoDialog(
             self.root,
@@ -136,11 +136,10 @@ class NucleosidApplication(object):
                 output.write_analysis(self.output_file.get())
             message = (
                 "The analysis is successful. The output has been saved to:\n"
-                "%s\n\n"
-                "%i matching RNA modifications have been found\n"
-                "%i hits have been filtered out using the given filters\n"
-                % (self.output_file.get(), len(results),
-                   data_analyzer.filtered_number)
+                f"{self.output_file.get()}\n\n"
+                f"{len(results)} matching RNA modifications have been found\n"
+                f"{data_analyzer.filtered_number} hits have been filtered"
+                " out using the given filters\n"
             )
         else:
             message = (

@@ -19,7 +19,7 @@ import numpy as np
 from nucleosid import ms_ms_spectrum
 
 
-class MgfParser(object):
+class MgfParser:
     """A class for parsing a MFG file."""
 
     def __init__(self, filename):
@@ -28,7 +28,7 @@ class MgfParser(object):
         :param str filename: a file with data in MGF format.
         """
         self.ms_ms_spectra = []
-        with open(filename, 'r') as mgf_file:
+        with open(filename, 'r', encoding="utf-8") as mgf_file:
             contents = mgf_file.readlines()
             self._parse_mgf_data(contents)
 
@@ -88,7 +88,7 @@ class MgfParser(object):
 
     def get_peak_list(self):
         """Return the list of peaks."""
-        data = np.array()
+        data = []
         for spectrum in self.ms_ms_spectra:
-            data = data.append(spectrum['data'])
-        return data
+            data.append(spectrum['data'])
+        return np.array(data)

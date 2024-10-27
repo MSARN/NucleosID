@@ -17,7 +17,7 @@
 import pandas as pd
 
 
-class AnalysisWriter(object):
+class AnalysisWriter:
     """A class for writing analysing results."""
 
     def __init__(self, data):
@@ -46,10 +46,13 @@ class AnalysisWriter(object):
         if filename[-5:] != '.xlsx':
             # Add the right extension
             filename = filename + '.xlsx'
-        with pd.ExcelWriter(filename) as writer:
-            self.data.sort_values('Detection time (s)', inplace=True)
-            self.data.to_excel(
-                writer,
-                index=False,
-                sheet_name="Nucleosid_Results"
-            )
+        writer = pd.ExcelWriter(  # pylint: disable=abstract-class-instantiated
+            'pandas_simple.xlsx',
+            engine='xlsxwriter'
+        )
+        self.data.sort_values('Detection time (s)', inplace=True)
+        self.data.to_excel(
+            writer,
+            index=False,
+            sheet_name="Nucleosid_Results"
+        )
